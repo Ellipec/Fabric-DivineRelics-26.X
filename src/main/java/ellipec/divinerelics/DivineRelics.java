@@ -19,5 +19,6 @@ public class DivineRelics implements ModInitializer {
 
 		ModItems.registerModItems();
 
+
 	}
 }

@@ -27,6 +27,7 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.FROSTBITE_ARROW);
                     }).build());
 
+
     public static void registerModCreativeModTabs() {
         DivineRelics.LOGGER.info("Registering Mod Creative Mod Tabsfor " + DivineRelics.MOD_ID);
     }

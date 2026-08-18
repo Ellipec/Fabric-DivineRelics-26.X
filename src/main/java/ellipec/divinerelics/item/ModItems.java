@@ -45,6 +45,7 @@ public class ModItems {
             output.accept(HEART_OF_THE_SKY);
             output.accept(DRAGON_SCALE);
             output.accept(FROSTBITE_ARROW);
+
         });
     }
 }

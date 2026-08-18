@@ -10,5 +10,6 @@ public class DivineRelicsDataGenerator implements DataGeneratorEntrypoint {
 		var pack = fabricDataGenerator.createPack();
 
 		pack.addProvider(ModModelProvider::new);
+
 	}
 }
