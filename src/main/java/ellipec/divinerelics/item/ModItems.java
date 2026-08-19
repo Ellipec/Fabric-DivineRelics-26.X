@@ -1,6 +1,7 @@
 package ellipec.divinerelics.item;
 
 import ellipec.divinerelics.DivineRelics;
+import ellipec.divinerelics.item.custom.HeartofAegis;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -16,7 +17,8 @@ import java.util.function.Function;
 public class ModItems {
     public static final Item SIGIL_OF_AEGIS = registerItem("sigil-of-aegis", Item::new);
     public static final Item AEGIS_REMNANT = registerItem("aegis-remnant", Item::new);
-    public static final Item HEART_OF_AEGIS = registerItem("heart-of-aegis", Item::new);
+    public static final Item HEART_OF_AEGIS = registerItem("heart-of-aegis", HeartofAegis::;
+    // I know this registerItem part isn't finished, that's because I went to mess around a little with ModDDataComponents and it didnt work ayways so I left it like this.
     public static final Item FRAGMENT_OF_VALOR = registerItem("fragment-of-valor", Item::new);
     public static final Item VOLCANIC_CORE = registerItem("volcanic-core", Item::new);
     public static final Item ESSENCE_OF_WIND = registerItem("essence-of-wind", Item::new);

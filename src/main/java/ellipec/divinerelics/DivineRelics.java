@@ -2,6 +2,7 @@ package ellipec.divinerelics;
 
 import ellipec.divinerelics.creativemodtab.ModCreativeModTabs;
 import ellipec.divinerelics.item.ModItems;
+import ellipec.divinerelics.item.custom.HeartofAegis;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.resources.Identifier;
@@ -16,8 +17,9 @@ public class DivineRelics implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModCreativeModTabs.registerModCreativeModTabs();
-
 		ModItems.registerModItems();
+
+
 
 
 	}
