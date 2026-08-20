@@ -16,13 +16,14 @@ public class ModCreativeModTabs {
             FabricCreativeModeTab.builder().icon(() -> new ItemStack(ModItems.AEGIS_REMNANT))
                     .title(Component.translatable("creativemodetab.divinerelics.divine_relics"))
                     .displayItems((parameters, output) -> {
-                        output.accept(ModItems.AEGIS_REMNANT);
-                        output.accept(ModItems.HEART_OF_AEGIS);
                         output.accept(ModItems.SIGIL_OF_AEGIS);
+                        output.accept(ModItems.HEART_OF_AEGIS);
+                        output.accept(ModItems.AEGIS_REMNANT);
+                        output.accept(ModItems.FRAGMENT_OF_VALOR);
                         output.accept(ModItems.VOLCANIC_CORE);
-                        output.accept(ModItems.ESSENCE_OF_THUNDER);
-                        output.accept(ModItems.ESSENCE_OF_WIND);
                         output.accept(ModItems.HEART_OF_THE_SKY);
+                        output.accept(ModItems.ESSENCE_OF_WIND);
+                        output.accept(ModItems.ESSENCE_OF_THUNDER);
                         output.accept(ModItems.DRAGON_SCALE);
                         output.accept(ModItems.FROSTBITE_ARROW);
                     }).build());
