@@ -1,6 +1,7 @@
 {
+  "creativemodetab.divinerelics.divine_relics": "Divine Relics",
   "item.divinerelics.sigil-of-aegis": "Sigil of Aegis",
-  "item.divinerelics.heart-of-aegis": "Heart of Aeigs",
+  "item.divinerelics.heart-of-aegis": "Heart of Aegis",
   "item.divinerelics.aegis-remnant": "Aegis' Remnant",
   "item.divinerelics.fragment-of-valor": "Fragment of Valor",
   "item.divinerelics.frostbite-arrow": "Frostbite Arrow",
@@ -9,7 +10,18 @@
   "item.divinerelics.essence-of-wind": "Essence of Wind",
   "item.divinerelics.essence-of-thunder": "Essence of Thunder",
   "item.divinerelics.dragon-scale": "Dragon Scale",
-  "creativemodetab.divinerelics.divine_relics": "Divine Relics"
-
+  "item.divinerelics.yeti-cloak": "Yeti Cloak",
+  "item.divinerelics.aegis-valor": "Aegis' Valor",
+  "item.divinerelics.aegis-resolve": "Aegis' Resolve",
+  "item.divinerelics.soul-of-aegis": "Soul of Aegis",
+  "item.divinerelics.crown-of-the-ancients": "Crown of the Ancients",
+  "item.divinerelics.emberfang": "Emberfang",
+  "item.divinerelics.tempest-edge": "Tempest Edge",
+  "item.divinerelics.frostmourne": "Frostmourne",
+  "item.divinerelics.olympus-wrath": "Olympus' Wrath",
+  "item.divinerelics.dragons-ruin": "Dragon's Ruin",
+  "item.divinerelics.yeti-heart": "Yeti Heart",
+  "item.divinerelics.frozen-fang": "Frozen Fang",
+  "item.divinerelics.yeti-fur": "Yeti Fur"
 
 }

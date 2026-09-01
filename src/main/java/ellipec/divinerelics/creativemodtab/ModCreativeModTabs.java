@@ -25,7 +25,23 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.ESSENCE_OF_WIND);
                         output.accept(ModItems.ESSENCE_OF_THUNDER);
                         output.accept(ModItems.DRAGON_SCALE);
+                        // YETI ITEMS BELOW
                         output.accept(ModItems.FROSTBITE_ARROW);
+                        output.accept(ModItems.YETI_CLOAK);
+                        output.accept(ModItems.YETI_HEART);
+                        output.accept(ModItems.FROZEN_FANG);
+                        output.accept(ModItems.YETI_FUR);
+                        // LEGENDARY ITEMS BELOW
+                        output.accept(ModItems.AEGIS_VALOR);
+                        output.accept(ModItems.AEGIS_RESOLVE);
+                        output.accept(ModItems.SOUL_OF_AEGIS);
+                        output.accept(ModItems.CROWN_OF_THE_ANCIENTS);
+                        output.accept(ModItems.EMBERFANG);
+                        output.accept(ModItems.TEMPEST_EDGE);
+                        output.accept(ModItems.FROSTMOURNE);
+                        output.accept(ModItems.OLYMPUS_WRATH);
+                        output.accept(ModItems.DRAGONS_RUIN);
+
                     }).build());
 
 
