@@ -1,5 +1,6 @@
 package ellipec.divinerelics.datagen;
 
+import ellipec.divinerelics.item.ModArmorMaterials;
 import ellipec.divinerelics.item.ModItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -35,15 +36,21 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.FROZEN_FANG, ModelTemplates.FLAT_ITEM);
 
         // LEGENDARY ITEMS BELOW
-        itemModelGenerators.generateFlatItem(ModItems.AEGIS_VALOR, ModelTemplates.FLAT_ITEM);
-        itemModelGenerators.generateFlatItem(ModItems.AEGIS_RESOLVE, ModelTemplates.FLAT_ITEM);
-        itemModelGenerators.generateFlatItem(ModItems.SOUL_OF_AEGIS, ModelTemplates.FLAT_ITEM);
-        itemModelGenerators.generateFlatItem(ModItems.CROWN_OF_THE_ANCIENTS, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.EMBERFANG, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.TEMPEST_EDGE, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.FROSTMOURNE, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.OLYMPUS_WRATH, ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.JARNGREIPR, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.DRAGONS_RUIN, ModelTemplates.FLAT_ITEM);
+
+        itemModelGenerators.generateTrimmableItem(ModItems.CROWN_OF_THE_ANCIENTS, ModArmorMaterials.DIVINE_KEY,
+                ItemModelGenerators.TRIM_PREFIX_HELMET, false);
+        itemModelGenerators.generateTrimmableItem(ModItems.SOUL_OF_AEGIS, ModArmorMaterials.DIVINE_KEY,
+                ItemModelGenerators.TRIM_PREFIX_CHESTPLATE, false);
+        itemModelGenerators.generateTrimmableItem(ModItems.AEGIS_RESOLVE, ModArmorMaterials.DIVINE_KEY,
+                ItemModelGenerators.TRIM_PREFIX_LEGGINGS, false);
+        itemModelGenerators.generateTrimmableItem(ModItems.AEGIS_VALOR, ModArmorMaterials.DIVINE_KEY,
+                ItemModelGenerators.TRIM_PREFIX_BOOTS, false);
 
 
     }

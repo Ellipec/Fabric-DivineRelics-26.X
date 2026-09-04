@@ -1,6 +1,7 @@
 package ellipec.divinerelics;
 
 import ellipec.divinerelics.creativemodtab.ModCreativeModTabs;
+import ellipec.divinerelics.item.ModArmorMaterials;
 import ellipec.divinerelics.item.ModItems;
 import ellipec.divinerelics.item.ModToolMaterials;
 import ellipec.divinerelics.item.custom.HeartofAegis;

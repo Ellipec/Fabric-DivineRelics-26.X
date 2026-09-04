@@ -40,6 +40,7 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.TEMPEST_EDGE);
                         output.accept(ModItems.FROSTMOURNE);
                         output.accept(ModItems.OLYMPUS_WRATH);
+                        output.accept(ModItems.JARNGREIPR);
                         output.accept(ModItems.DRAGONS_RUIN);
 
                     }).build());
