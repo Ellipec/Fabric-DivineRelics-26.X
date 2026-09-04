@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "divinerelics:item/aegis-valor",
+    "layer1": "minecraft:trims/items/boots_trim_lapis"
+  }
+}

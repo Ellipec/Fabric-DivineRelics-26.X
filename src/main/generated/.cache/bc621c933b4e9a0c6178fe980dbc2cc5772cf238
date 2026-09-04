@@ -1,0 +1,7 @@
+// 26.1.2	-999999999-01-01T00:00:00	Divine Relics/Tags for minecraft:item
+5543e9c4d6ec6f0a636b66b7d30543fc40ed44aa data/minecraft/tags/item/axes.json
+741faa119c8f1e6f3a7c91cc93ce3dc8be1ce575 data/minecraft/tags/item/chest_armor.json
+a9a1a40f50b42902b60124bde46d729161f79a4b data/minecraft/tags/item/foot_armor.json
+e5ca46a47d3cae932b9738ba778b9a8d03088cb7 data/minecraft/tags/item/head_armor.json
+42a925c85d7d0159ed43c7172e03cf8ea12c3178 data/minecraft/tags/item/leg_armor.json
+c3bf4486238886b0019814ed3ddfeef28fc316c1 data/minecraft/tags/item/swords.json

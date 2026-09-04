@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "divinerelics:item/soul-of-aegis",
+    "layer1": "minecraft:trims/items/chestplate_trim_iron"
+  }
+}

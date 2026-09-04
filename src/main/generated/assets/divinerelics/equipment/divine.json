@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "divinerelics:divine"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "divinerelics:divine"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "divinerelics:divine"
+      }
+    ]
+  }
+}
