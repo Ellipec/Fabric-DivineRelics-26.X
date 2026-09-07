@@ -1,13 +1,8 @@
 package ellipec.divinerelics;
 
 import ellipec.divinerelics.creativemodtab.ModCreativeModTabs;
-import ellipec.divinerelics.item.ModArmorMaterials;
 import ellipec.divinerelics.item.ModItems;
-import ellipec.divinerelics.item.ModToolMaterials;
-import ellipec.divinerelics.item.custom.HeartofAegis;
 import net.fabricmc.api.ModInitializer;
-
-import net.minecraft.resources.Identifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
