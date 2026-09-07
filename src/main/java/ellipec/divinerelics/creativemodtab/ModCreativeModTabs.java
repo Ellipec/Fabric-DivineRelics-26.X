@@ -23,11 +23,12 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.VOLCANIC_CORE);
                         output.accept(ModItems.HEART_OF_THE_SKY);
                         output.accept(ModItems.ESSENCE_OF_WIND);
-                        output.accept(ModItems.ESSENCE_OF_THUNDER);
+                        output.accept(ModItems.BERSERKERS_RELIC);
                         output.accept(ModItems.DRAGON_SCALE);
+
+                        output.accept(ModItems.ESSENCE_OF_THUNDER);
                         // YETI ITEMS BELOW
                         output.accept(ModItems.FROSTBITE_ARROW);
-                        output.accept(ModItems.YETI_CLOAK);
                         output.accept(ModItems.YETI_HEART);
                         output.accept(ModItems.FROZEN_FANG);
                         output.accept(ModItems.YETI_FUR);

@@ -24,9 +24,9 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.AEGIS_REMNANT, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.HEART_OF_AEGIS, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.VOLCANIC_CORE, ModelTemplates.FLAT_ITEM);
-        itemModelGenerators.generateFlatItem(ModItems.ESSENCE_OF_THUNDER, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.ESSENCE_OF_WIND, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.FROSTBITE_ARROW, ModelTemplates.FLAT_ITEM);
+        itemModelGenerators.generateFlatItem(ModItems.BERSERKERS_RELIC, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.DRAGON_SCALE, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.HEART_OF_THE_SKY, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.FRAGMENT_OF_VALOR, ModelTemplates.FLAT_ITEM);
@@ -35,13 +35,15 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.YETI_HEART, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.FROZEN_FANG, ModelTemplates.FLAT_ITEM);
 
+        itemModelGenerators.generateFlatItem(ModItems.ESSENCE_OF_THUNDER, ModelTemplates.FLAT_ITEM);
         // LEGENDARY ITEMS BELOW
         itemModelGenerators.generateFlatItem(ModItems.EMBERFANG, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.TEMPEST_EDGE, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.FROSTMOURNE, ModelTemplates.FLAT_ITEM);
-        itemModelGenerators.generateFlatItem(ModItems.OLYMPUS_WRATH, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.JARNGREIPR, ModelTemplates.FLAT_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.DRAGONS_RUIN, ModelTemplates.FLAT_ITEM);
+
+        itemModelGenerators.generateFlatItem(ModItems.OLYMPUS_WRATH, ModelTemplates.FLAT_ITEM);
 
         itemModelGenerators.generateTrimmableItem(ModItems.CROWN_OF_THE_ANCIENTS, ModArmorMaterials.DIVINE_KEY,
                 ItemModelGenerators.TRIM_PREFIX_HELMET, false);

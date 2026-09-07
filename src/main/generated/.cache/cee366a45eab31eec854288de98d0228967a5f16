@@ -2,6 +2,7 @@
 8cdb38d03d391cd091813aa47e3946ea544ba253 assets/divinerelics/items/aegis-remnant.json
 1d258b66917e32fc7a10afb4814bf9fbe3bb8105 assets/divinerelics/items/aegis-resolve.json
 3cc77445e23322d4c9d8e6952d521e6c1737231d assets/divinerelics/items/aegis-valor.json
+368f0bd1bbc6c829f16c8dc7cca6d0f197173137 assets/divinerelics/items/berserkers-relic.json
 890fc9a8137705609f722586594aa48a7e07c047 assets/divinerelics/items/crown-of-the-ancients.json
 17b99087195886d876c78321a4dca7b71ffb6778 assets/divinerelics/items/dragon-scale.json
 2d2a071cd832bd74f3d43fe7fdd8c29dd196480e assets/divinerelics/items/dragons-ruin.json
@@ -48,6 +49,7 @@ d8fc0b3ed62a5455be594fb2cfeffe367a2eb599 assets/divinerelics/models/item/aegis-v
 85b917c06d32cdd7b643f07514368163f3180eef assets/divinerelics/models/item/aegis-valor_quartz_trim.json
 3815e954bb2ce303fc0a03bec61961acf53da8d6 assets/divinerelics/models/item/aegis-valor_redstone_trim.json
 8c152f4e5c59d1dfd588953c93824f77132e4149 assets/divinerelics/models/item/aegis-valor_resin_trim.json
+a1313f1d6ae3c8cc48fa2ccf138637a3dab4b76f assets/divinerelics/models/item/berserkers-relic.json
 b0b727b61b0d7c6c944f54422fe37c1cd856c18b assets/divinerelics/models/item/crown-of-the-ancients.json
 e0a4506766f196cb378646ee5d4fa02992cbb508 assets/divinerelics/models/item/crown-of-the-ancients_amethyst_trim.json
 d661e7a3f62f8084ae9393fd3dd6cb759ae6750c assets/divinerelics/models/item/crown-of-the-ancients_copper_trim.json

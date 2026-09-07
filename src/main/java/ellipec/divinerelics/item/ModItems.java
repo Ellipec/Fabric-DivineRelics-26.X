@@ -22,8 +22,9 @@ public class ModItems {
     public static final Item VOLCANIC_CORE = registerItem("volcanic-core", Item::new);
     public static final Item ESSENCE_OF_WIND = registerItem("essence-of-wind", Item::new);
     public static final Item HEART_OF_THE_SKY = registerItem("heart-of-the-sky", Item::new);
-    public static final Item ESSENCE_OF_THUNDER = registerItem("essence-of-thunder", Item::new);
+    public static final Item BERSERKERS_RELIC = registerItem("berserkers-relic", Item::new);
     public static final Item DRAGON_SCALE = registerItem("dragon-scale", Item::new);
+    public static final Item ESSENCE_OF_THUNDER = registerItem("essence-of-thunder", Item::new);
     // YETI ITEMS BELOW
     public static final Item YETI_CLOAK = registerItem("yeti-cloak", Item::new);
     public static final Item FROSTBITE_ARROW = registerItem("frostbite-arrow", Item::new);
