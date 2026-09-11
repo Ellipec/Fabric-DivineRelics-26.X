@@ -25,8 +25,6 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.ESSENCE_OF_WIND);
                         output.accept(ModItems.BERSERKERS_RELIC);
                         output.accept(ModItems.DRAGON_SCALE);
-
-                        output.accept(ModItems.ESSENCE_OF_THUNDER);
                         // YETI ITEMS BELOW
                         output.accept(ModItems.FROSTBITE_ARROW);
                         output.accept(ModItems.YETI_HEART);
@@ -40,9 +38,11 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.EMBERFANG);
                         output.accept(ModItems.TEMPEST_EDGE);
                         output.accept(ModItems.FROSTMOURNE);
-                        output.accept(ModItems.OLYMPUS_WRATH);
                         output.accept(ModItems.JARNGREIPR);
                         output.accept(ModItems.DRAGONS_RUIN);
+                        // SCRAPED ITEMS
+                        output.accept(ModItems.OLYMPUS_WRATH);
+                        output.accept(ModItems.ESSENCE_OF_THUNDER);
 
                     }).build());
 
