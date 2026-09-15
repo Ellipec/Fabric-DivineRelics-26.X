@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "legendary-weapon",
+  "key": {
+    "B": "minecraft:blaze_rod",
+    "L": "minecraft:lava_bucket",
+    "P": "minecraft:player_head",
+    "S": "minecraft:netherite_sword",
+    "V": "divinerelics:volcanic-core"
+  },
+  "pattern": [
+    "LBL",
+    "PVP",
+    "LSL"
+  ],
+  "result": {
+    "id": "divinerelics:emberfang"
+  }
+}
