@@ -21,7 +21,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         return new RecipeProvider(registries, output) {
             @Override
             public void buildRecipes() {
-
+                    // LEGENDARY ITEMS
                 shaped(RecipeCategory.MISC, ModItems.EMBERFANG)
                         .pattern("LBL")
                         .pattern("PVP")
@@ -134,6 +134,56 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy(getHasName(ModItems.FRAGMENT_OF_VALOR), has(ModItems.FRAGMENT_OF_VALOR))
                         .group("legendary-weapon")
                         .save(output, "aegis_valor_boots");
+                        //LEGENDARY CRAFTING ITEMS
+
+                shaped(RecipeCategory.MISC, ModItems.VOLCANIC_CORE)
+                        .pattern("MBM")
+                        .pattern("ONO")
+                        .pattern("MBM")
+                        .define('M', Items.MAGMA_CREAM)
+                        .define('B', Items.BLAZE_ROD)
+                        .define('N', Items.NETHER_STAR)
+                        .define('O', Items.OBSIDIAN)
+                        .unlockedBy(getHasName(Items.NETHER_STAR), has(Items.NETHER_STAR))
+                        .group("legendary-weapon-base")
+                        .save(output, "volcanic_core");
+
+                shaped(RecipeCategory.MISC, ModItems.ESSENCE_OF_WIND)
+                        .pattern("PBP")
+                        .pattern("FHF")
+                        .pattern("PBP")
+                        .define('H', ModItems.HEART_OF_THE_SKY)
+                        .define('P', Items.PHANTOM_MEMBRANE)
+                        .define('B', Items.BREEZE_ROD)
+                        .define('F', Items.FEATHER)
+                        .unlockedBy(getHasName(ModItems.HEART_OF_THE_SKY), has(ModItems.HEART_OF_THE_SKY))
+                        .group("legendary-weapon-base")
+                        .save(output, "essence_of_wind");
+
+                    // YETI ITEMS
+                shaped(RecipeCategory.MISC, ModItems.FROSTBITE_ARROW)
+                        .pattern(" F ")
+                        .pattern("ASA")
+                        .pattern(" A ")
+                        .define('F', ModItems.FROZEN_FANG)
+                        .define('A', Items.ARROW)
+                        .define('S', Items.SNOWBALL)
+                        .unlockedBy(getHasName(ModItems.FROZEN_FANG), has(ModItems.FROZEN_FANG))
+                        .group("yeti-items")
+                        .save(output, "frostbite_arrow");
+
+                shaped(RecipeCategory.MISC, ModItems.YETI_CLOAK)
+                        .pattern("YLY")
+                        .pattern("LTL")
+                        .pattern("YPY")
+                        .define('Y', ModItems.YETI_FUR)
+                        .define('L', Items.LEATHER)
+                        .define('T', Items.LEATHER_CHESTPLATE)
+                        .define('P', Items.LEATHER_LEGGINGS)
+                        .unlockedBy(getHasName(ModItems.YETI_FUR), has(ModItems.YETI_FUR))
+                        .group("yeti-items")
+                        .save(output, "yeti_cloak");
+
             }
         };
     }
