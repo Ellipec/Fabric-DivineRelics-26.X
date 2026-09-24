@@ -95,5 +95,17 @@ public class ModLootTableModifiers {
 
             builder.pool(poolBuilder.build());
         }
+
+        // OMINOUS TRIAL CHAMBER UNIQUE - 5% chance
+        if (BuiltInLootTables.TRIAL_CHAMBERS_REWARD_OMINOUS_UNIQUE.equals(key)) {
+            LootPool.Builder poolBuilder = LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(0.05f))
+                    .add(LootItem.lootTableItem(ModItems.HEART_OF_AEGIS))
+                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)).build());
+
+            builder.pool(poolBuilder.build());
+        }
+
     }
 }
