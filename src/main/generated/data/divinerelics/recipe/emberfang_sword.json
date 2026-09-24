@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "legendary-weapon",
   "key": {
     "B": "minecraft:blaze_rod",

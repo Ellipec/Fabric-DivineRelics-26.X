@@ -45,6 +45,9 @@ public class ModItems {
     public static final Item DRAGONS_RUIN = registerItem("dragons-ruin", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
 
 
+    public static ResourceKey<Item> getRK(Item item) {
+        return BuiltInRegistries.ITEM.getResourceKey(item).get();
+    }
     private static Item registerItem(String name, Function<Item.Properties, Item> function) {
         return Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(DivineRelics.MOD_ID, name),
                 function.apply(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(DivineRelics.MOD_ID, name)))));

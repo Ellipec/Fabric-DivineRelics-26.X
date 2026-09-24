@@ -70,6 +70,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .define('N', Items.NETHERITE_INGOT)
                         .define('P', Items.PLAYER_HEAD)
                         .define('H', Items.HEAVY_CORE)
+                        .define('A', Items.NETHERITE_AXE)
                         .unlockedBy(getHasName(ModItems.BERSERKERS_RELIC), has(ModItems.BERSERKERS_RELIC))
                         .group("legendary-weapon")
                         .save(output, "jarngreipr_axe");

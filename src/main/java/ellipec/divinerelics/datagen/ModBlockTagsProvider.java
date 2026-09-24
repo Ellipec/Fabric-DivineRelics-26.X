@@ -13,7 +13,7 @@ public class ModBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
     }
     @Override
     protected void addTags(HolderLookup.Provider registries) {
-        valueLookupBuilder(ModTags.Blocks.NEEDS_DIVINE_TOOL)
+        tag(ModTags.Blocks.NEEDS_DIVINE_TOOL)
                 .addTag(BlockTags.NEEDS_DIAMOND_TOOL);
 
     }
