@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "legendary-weapon-base",
+  "key": {
+    "B": "minecraft:breeze_rod",
+    "F": "minecraft:feather",
+    "H": "divinerelics:heart-of-the-sky",
+    "P": "minecraft:phantom_membrane"
+  },
+  "pattern": [
+    "PBP",
+    "FHF",
+    "PBP"
+  ],
+  "result": {
+    "id": "divinerelics:essence-of-wind"
+  }
+}

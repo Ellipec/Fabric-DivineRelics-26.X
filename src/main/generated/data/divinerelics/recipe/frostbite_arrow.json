@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "yeti-items",
+  "key": {
+    "A": "minecraft:arrow",
+    "F": "divinerelics:frozen-fang",
+    "S": "minecraft:snowball"
+  },
+  "pattern": [
+    " F ",
+    "ASA",
+    " A "
+  ],
+  "result": {
+    "id": "divinerelics:frostbite-arrow"
+  }
+}

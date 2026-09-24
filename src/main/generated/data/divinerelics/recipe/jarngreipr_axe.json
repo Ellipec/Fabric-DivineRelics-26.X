@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "legendary-weapon",
+  "key": {
+    "A": "minecraft:netherite_axe",
+    "B": "divinerelics:berserkers-relic",
+    "H": "minecraft:heavy_core",
+    "I": "minecraft:iron_block",
+    "N": "minecraft:netherite_ingot",
+    "P": "minecraft:player_head"
+  },
+  "pattern": [
+    "IHI",
+    "NBN",
+    "PAP"
+  ],
+  "result": {
+    "id": "divinerelics:jarngreipr"
+  }
+}

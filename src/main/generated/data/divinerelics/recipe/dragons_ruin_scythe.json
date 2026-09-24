@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "legendary-weapon",
+  "key": {
+    "E": "minecraft:dragon_egg",
+    "N": "minecraft:nether_star",
+    "P": "minecraft:player_head",
+    "S": "divinerelics:dragon-scale"
+  },
+  "pattern": [
+    "SSS",
+    "SES",
+    "PNP"
+  ],
+  "result": {
+    "id": "divinerelics:dragons-ruin"
+  }
+}

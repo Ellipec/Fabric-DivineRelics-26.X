@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "yeti-items",
+  "key": {
+    "L": "minecraft:leather",
+    "P": "minecraft:leather_leggings",
+    "T": "minecraft:leather_chestplate",
+    "Y": "divinerelics:yeti-fur"
+  },
+  "pattern": [
+    "YLY",
+    "LTL",
+    "YPY"
+  ],
+  "result": {
+    "id": "divinerelics:yeti-cloak"
+  }
+}

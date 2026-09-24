@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "legendary-weapon",
+  "key": {
+    "G": "minecraft:gold_block",
+    "H": "minecraft:heavy_core",
+    "S": "divinerelics:sigil-of-aegis"
+  },
+  "pattern": [
+    "GSG",
+    "GHG",
+    "GGG"
+  ],
+  "result": {
+    "id": "divinerelics:crown-of-the-ancients"
+  }
+}

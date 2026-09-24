@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dragon-scale": {
+      "conditions": {
+        "items": [
+          {
+            "items": "divinerelics:dragon-scale"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "divinerelics:dragons_ruin_scythe"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dragon-scale"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "divinerelics:dragons_ruin_scythe"
+    ]
+  }
+}

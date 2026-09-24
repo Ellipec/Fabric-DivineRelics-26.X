@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "legendary-weapon",
+  "key": {
+    "A": "divinerelics:aegis-remnant",
+    "G": "minecraft:gold_block",
+    "H": "minecraft:heavy_core",
+    "I": "minecraft:iron_block",
+    "N": "minecraft:netherite_ingot"
+  },
+  "pattern": [
+    "IAI",
+    "GHG",
+    "N N"
+  ],
+  "result": {
+    "id": "divinerelics:aegis-resolve"
+  }
+}

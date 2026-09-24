@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_heart-of-aegis": {
+      "conditions": {
+        "items": [
+          {
+            "items": "divinerelics:heart-of-aegis"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "divinerelics:soul_of_aegis_chestplate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_heart-of-aegis"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "divinerelics:soul_of_aegis_chestplate"
+    ]
+  }
+}

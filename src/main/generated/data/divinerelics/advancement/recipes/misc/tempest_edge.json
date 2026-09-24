@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_essence-of-wind": {
+      "conditions": {
+        "items": [
+          {
+            "items": "divinerelics:essence-of-wind"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "divinerelics:tempest_edge"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_essence-of-wind"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "divinerelics:tempest_edge"
+    ]
+  }
+}

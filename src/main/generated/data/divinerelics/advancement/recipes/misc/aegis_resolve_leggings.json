@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_aegis-remnant": {
+      "conditions": {
+        "items": [
+          {
+            "items": "divinerelics:aegis-remnant"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "divinerelics:aegis_resolve_leggings"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_aegis-remnant"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "divinerelics:aegis_resolve_leggings"
+    ]
+  }
+}
