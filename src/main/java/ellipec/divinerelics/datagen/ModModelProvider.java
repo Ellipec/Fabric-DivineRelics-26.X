@@ -44,7 +44,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.DRAGONS_RUIN, ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.OLYMPUS_WRATH, ModelTemplates.FLAT_HANDHELD_ITEM);
 
-        itemModelGenerators.generateTrimmableItem(ModItems.CROWN_OF_THE_ANCIENTS, ModArmorMaterials.DIVINE_KEY,
+        itemModelGenerators.generateTrimmableItem(ModItems.HELM_OF_THE_ANCIENTS, ModArmorMaterials.DIVINE_KEY,
                 ItemModelGenerators.TRIM_PREFIX_HELMET, false);
         itemModelGenerators.generateTrimmableItem(ModItems.SOUL_OF_AEGIS, ModArmorMaterials.DIVINE_KEY,
                 ItemModelGenerators.TRIM_PREFIX_CHESTPLATE, false);

@@ -34,7 +34,7 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.AEGIS_VALOR);
                         output.accept(ModItems.AEGIS_RESOLVE);
                         output.accept(ModItems.SOUL_OF_AEGIS);
-                        output.accept(ModItems.CROWN_OF_THE_ANCIENTS);
+                        output.accept(ModItems.HELM_OF_THE_ANCIENTS);
                         output.accept(ModItems.EMBERFANG);
                         output.accept(ModItems.TEMPEST_EDGE);
                         output.accept(ModItems.FROSTMOURNE);

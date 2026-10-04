@@ -23,7 +23,7 @@ public class ModItemTagsProvider extends FabricTagsProvider.ItemTagsProvider {
 
         tag(ItemTags.AXES).add(ModItems.getRK(ModItems.JARNGREIPR));
 
-        tag(ItemTags.HEAD_ARMOR).add(ModItems.getRK(ModItems.CROWN_OF_THE_ANCIENTS));
+        tag(ItemTags.HEAD_ARMOR).add(ModItems.getRK(ModItems.HELM_OF_THE_ANCIENTS));
         tag(ItemTags.CHEST_ARMOR).add(ModItems.getRK(ModItems.SOUL_OF_AEGIS));
         tag(ItemTags.LEG_ARMOR).add(ModItems.getRK(ModItems.AEGIS_RESOLVE));
         tag(ItemTags.FOOT_ARMOR).add(ModItems.getRK(ModItems.AEGIS_VALOR));

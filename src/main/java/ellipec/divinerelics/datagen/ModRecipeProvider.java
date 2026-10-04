@@ -87,7 +87,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .group("legendary-weapon")
                         .save(output, "dragons_ruin_scythe");
 
-                shaped(RecipeCategory.MISC, ModItems.CROWN_OF_THE_ANCIENTS)
+                shaped(RecipeCategory.MISC, ModItems.HELM_OF_THE_ANCIENTS)
                         .pattern("GSG")
                         .pattern("GHG")
                         .pattern("GGG")
@@ -96,7 +96,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .define('G', Items.GOLD_BLOCK)
                         .unlockedBy(getHasName(ModItems.SIGIL_OF_AEGIS), has(ModItems.SIGIL_OF_AEGIS))
                         .group("legendary-weapon")
-                        .save(output, "crown_of_the_ancients_helmet");
+                        .save(output, "helm_of_the_ancients_helmet");
 
                 shaped(RecipeCategory.MISC, ModItems.SOUL_OF_AEGIS)
                         .pattern("IAI")

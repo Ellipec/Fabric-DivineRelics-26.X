@@ -2,6 +2,7 @@ package ellipec.divinerelics.item;
 
 import ellipec.divinerelics.DivineRelics;
 import ellipec.divinerelics.undying.ModTotems;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,6 +11,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.equipment.ArmorType;
 
 import java.util.function.Function;
@@ -32,10 +35,10 @@ public class ModItems {
     public static final Item FROZEN_FANG = registerItem("frozen-fang", Item::new);
     public static final Item YETI_FUR = registerItem("yeti-fur", Item::new);
     // Legendary Items Below
-    public static final Item CROWN_OF_THE_ANCIENTS = registerItem("crown-of-the-ancients", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.HELMET).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE))));
-    public static final Item SOUL_OF_AEGIS = registerItem("soul-of-aegis", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.CHESTPLATE).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE))));
-    public static final Item AEGIS_RESOLVE = registerItem("aegis-resolve", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.LEGGINGS).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE))));
-    public static final Item AEGIS_VALOR = registerItem("aegis-valor", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.BOOTS).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE))));
+    public static final Item HELM_OF_THE_ANCIENTS = registerItem("helm-of-the-ancients", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.HELMET).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE).delayedComponent(DataComponents.ENCHANTMENTS, ModItems::crownEnchantments))));
+    public static final Item SOUL_OF_AEGIS = registerItem("soul-of-aegis", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.CHESTPLATE).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE).delayedComponent(DataComponents.ENCHANTMENTS, ModItems::soulOfAegisEnchantments))));
+    public static final Item AEGIS_RESOLVE = registerItem("aegis-resolve", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.LEGGINGS).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE).delayedComponent(DataComponents.ENCHANTMENTS, ModItems::aegisResolveEnchantments))));
+    public static final Item AEGIS_VALOR = registerItem("aegis-valor", properties -> new Item((properties.humanoidArmor(ModArmorMaterials.DIVINE_ARMOR_MATERIAL, ArmorType.BOOTS).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE).delayedComponent(DataComponents.ENCHANTMENTS, ModItems::aegisValorEnchantments))));
 
     public static final Item EMBERFANG = registerItem("emberfang", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
     public static final Item TEMPEST_EDGE = registerItem("tempest-edge", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
@@ -44,6 +47,43 @@ public class ModItems {
     public static final Item JARNGREIPR = registerItem("jarngreipr", properties -> new Item(properties.axe(ModToolMaterials.DIVINE, 7f, -3.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
     public static final Item DRAGONS_RUIN = registerItem("dragons-ruin", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
 
+    private static ItemEnchantments crownEnchantments(HolderLookup.Provider registries) {
+        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        var enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
+
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.PROTECTION), 5);
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.PROJECTILE_PROTECTION), 5);
+
+        return enchantments.toImmutable();
+    }
+    private static ItemEnchantments soulOfAegisEnchantments(HolderLookup.Provider registries) {
+        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        var enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
+
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.PROTECTION), 5);
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.BLAST_PROTECTION), 5);
+
+        return enchantments.toImmutable();
+    }
+    private static ItemEnchantments aegisResolveEnchantments(HolderLookup.Provider registries) {
+        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        var enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
+
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.PROTECTION), 5);
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.FIRE_PROTECTION), 5);
+
+        return enchantments.toImmutable();
+    }
+    
+    private static ItemEnchantments aegisValorEnchantments(HolderLookup.Provider registries) {
+        ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        var enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
+
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.PROTECTION), 5);
+        enchantments.set(enchantmentRegistry.getOrThrow(Enchantments.FEATHER_FALLING), 5);
+
+        return enchantments.toImmutable();
+    }
 
     public static ResourceKey<Item> getRK(Item item) {
         return BuiltInRegistries.ITEM.getResourceKey(item).get();
