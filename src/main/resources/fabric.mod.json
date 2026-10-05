@@ -18,6 +18,9 @@
 		"main": [
 			"ellipec.divinerelics.DivineRelics"
 		],
+		"client": [
+			"ellipec.divinerelics.DivineRelicsClient"
+		],
 		"fabric-datagen": [
 			"ellipec.divinerelics.DivineRelicsDataGenerator"
 		]

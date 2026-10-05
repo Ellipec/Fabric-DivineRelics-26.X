@@ -30,6 +30,7 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.YETI_HEART);
                         output.accept(ModItems.FROZEN_FANG);
                         output.accept(ModItems.YETI_FUR);
+                        output.accept(ModItems.YETI_CLOAK);
                         // LEGENDARY ITEMS BELOW
                         output.accept(ModItems.AEGIS_VALOR);
                         output.accept(ModItems.AEGIS_RESOLVE);
@@ -40,9 +41,6 @@ public class ModCreativeModTabs {
                         output.accept(ModItems.FROSTMOURNE);
                         output.accept(ModItems.JARNGREIPR);
                         output.accept(ModItems.DRAGONS_RUIN);
-                        // SCRAPED ITEMS
-                        output.accept(ModItems.OLYMPUS_WRATH);
-                        output.accept(ModItems.ESSENCE_OF_THUNDER);
 
                     }).build());
 
