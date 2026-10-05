@@ -1,5 +1,7 @@
 package ellipec.divinerelics;
 
+import ellipec.divinerelics.Networking.ModPackets;
+import ellipec.divinerelics.Networking.ServerboundPackets;
 import ellipec.divinerelics.creativemodtab.ModCreativeModTabs;
 import ellipec.divinerelics.item.ModItems;
 import ellipec.divinerelics.loot.ModLootTableModifiers;
@@ -18,8 +20,8 @@ public class DivineRelics implements ModInitializer {
 		ModCreativeModTabs.registerModCreativeModTabs();
 		ModItems.registerModItems();
 		LootTableEvents.MODIFY.register(ModLootTableModifiers::modifyLootTables);
-
-
+		ModPackets.registerC2SPackets();
+		ServerboundPackets.register();
 
 	}
 }

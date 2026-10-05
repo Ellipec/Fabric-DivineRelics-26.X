@@ -25,7 +25,9 @@
   "item.divinerelics.yeti-heart": "Yeti Heart",
   "item.divinerelics.frozen-fang": "Frozen Fang",
   "item.divinerelics.yeti-fur": "Yeti Fur",
-
-  "key.divinerelics.ellipec.key": "Ellipec Key"
-
+  "key.category.divinerelics.abilities": "Divine Relics",
+  "key.divinerelics.primary_ability": "Primary Ability",
+  "key.divinerelics.secondary_ability": "Secondary Ability",
+  "key.divinerelics.ultimate_ability": "Ultimate Ability"
 }
+
