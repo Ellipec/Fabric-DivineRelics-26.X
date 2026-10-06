@@ -1,4 +1,4 @@
-package ellipec.divinerelics.ability;
+package ellipec.divinerelics.powers.ability;
 
 import ellipec.divinerelics.item.ModItems;
 import net.minecraft.server.level.ServerPlayer;
