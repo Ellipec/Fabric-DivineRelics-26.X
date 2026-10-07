@@ -1,0 +1,2 @@
+function divinerelics:flame_strike_circle
+execute positioned 78 86 161 run function divinerelics:flame_strike_burst

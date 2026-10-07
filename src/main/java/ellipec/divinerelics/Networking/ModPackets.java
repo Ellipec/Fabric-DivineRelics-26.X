@@ -2,6 +2,7 @@ package ellipec.divinerelics.Networking;
 
 import ellipec.divinerelics.Networking.packet.DragonStepPayloadC2S;
 import ellipec.divinerelics.Networking.packet.GaleDashPayloadC2S;
+import ellipec.divinerelics.Networking.packet.GustPayloadC2S;
 import ellipec.divinerelics.Networking.packet.ScaleShotPayloadC2S;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
@@ -22,6 +23,11 @@ public class ModPackets {
         PayloadTypeRegistry.serverboundPlay().register(
                 ScaleShotPayloadC2S.TYPE,
                 ScaleShotPayloadC2S.STREAM_CODEC
+        );
+
+        PayloadTypeRegistry.serverboundPlay().register(
+                GustPayloadC2S.TYPE,
+                GustPayloadC2S.STREAM_CODEC
         );
     }
 }

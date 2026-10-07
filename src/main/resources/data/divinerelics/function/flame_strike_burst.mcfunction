@@ -1,0 +1,1 @@
+function divinerelics:flame_strike_burst_1

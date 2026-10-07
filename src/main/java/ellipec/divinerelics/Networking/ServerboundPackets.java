@@ -2,6 +2,7 @@ package ellipec.divinerelics.Networking;
 
 import ellipec.divinerelics.Networking.packet.DragonStepPayloadC2S;
 import ellipec.divinerelics.Networking.packet.GaleDashPayloadC2S;
+import ellipec.divinerelics.Networking.packet.GustPayloadC2S;
 import ellipec.divinerelics.Networking.packet.ScaleShotPayloadC2S;
 import ellipec.divinerelics.powers.ability.DragonRuinAbilities;
 import ellipec.divinerelics.powers.ability.TempestEdgeAbilities;
@@ -34,6 +35,15 @@ public class ServerboundPackets {
                 (payload, context) -> {
                     context.server().execute(() -> {
                         DragonRuinAbilities.scaleShot(context.player());
+                    });
+                }
+        );
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                GustPayloadC2S.TYPE,
+                (payload, context) -> {
+                    context.server().execute(() -> {
+                        TempestEdgeAbilities.gust(context.player());
                     });
                 }
         );
