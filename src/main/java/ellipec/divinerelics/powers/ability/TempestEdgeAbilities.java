@@ -12,7 +12,7 @@ import java.util.UUID;
 public class TempestEdgeAbilities {
 
     public static final int GALE_DASH_COOLDOWN = 200;
-    public static final int GUST_COOLDOWN = 300;
+    public static final int GUST_COOLDOWN = 0;
 
     private static final Map<UUID, Long> galeDashCooldowns = new HashMap<>();
     private static final Map<UUID, Long> gustCooldowns = new HashMap<>();

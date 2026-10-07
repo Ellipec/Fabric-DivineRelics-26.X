@@ -10,10 +10,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -31,17 +31,15 @@ public class GustEntity extends Entity implements GeoEntity {
     private final List<GustHitboxEntity> hitboxes =
             new ArrayList<>();
 
-    // The entity that fired the Gust.
     private LivingEntity owner;
 
-    // Entities that have been hit and are currently being
-    // watched for a wall impact.
     private final List<LivingEntity> wallImpactTargets =
             new ArrayList<>();
 
-    // Stores the tick when each entity was first hit by this Gust.
     private final Map<UUID, Long> gustImmunityTimes =
             new HashMap<>();
+
+    private static final double COLLISION_SIZE = 0.05;
 
     public GustEntity(
             EntityType<? extends GustEntity> entityType,
@@ -50,29 +48,14 @@ public class GustEntity extends Entity implements GeoEntity {
         super(entityType, level);
     }
 
-    /**
-     * Sets the entity that fired the Gust.
-     */
     public void setOwner(LivingEntity owner) {
         this.owner = owner;
     }
 
-    /**
-     * Gets the entity that fired the Gust.
-     */
     public LivingEntity getOwner() {
         return this.owner;
     }
 
-    /**
-     * Checks whether an entity is currently immune
-     * to further Gust damage.
-     *
-     * The first 10 ticks after the first successful hit
-     * are a multi-hit window.
-     *
-     * After that, the entity becomes immune for 100 ticks.
-     */
     public boolean isGustImmune(LivingEntity entity) {
 
         Long firstHitTick =
@@ -85,30 +68,21 @@ public class GustEntity extends Entity implements GeoEntity {
         long elapsed =
                 (long) this.tickCount - firstHitTick;
 
-        // First 10 ticks = 0.5 seconds.
-        // Multiple Gust hitboxes can hit during this time.
         if (elapsed < 10) {
             return false;
         }
 
-        // From tick 10 to tick 109 = 5 seconds of immunity.
         if (elapsed < 110) {
             return true;
         }
 
-        // Immunity has expired.
         gustImmunityTimes.remove(entity.getUUID());
 
         return false;
     }
 
-    /**
-     * Starts the Gust's immunity timer after
-     * the entity's first successful hit.
-     */
     public void startGustImmunity(LivingEntity entity) {
 
-        // Only start the timer on the first successful hit.
         if (!gustImmunityTimes.containsKey(entity.getUUID())) {
 
             gustImmunityTimes.put(
@@ -118,10 +92,6 @@ public class GustEntity extends Entity implements GeoEntity {
         }
     }
 
-    /**
-     * Adds an entity to the list of targets that should
-     * be watched for a wall impact.
-     */
     public void trackWallImpact(LivingEntity entity) {
 
         if (!wallImpactTargets.contains(entity)) {
@@ -133,34 +103,115 @@ public class GustEntity extends Entity implements GeoEntity {
     public void tick() {
         super.tick();
 
-        // Move the Gust forward.
-        this.move(MoverType.SELF, this.getDeltaMovement());
+        Vec3 movement =
+                this.getDeltaMovement();
 
-        // Gradually slow the Gust down.
+        Vec3 nextPosition =
+                this.position().add(movement);
+
+        if (!this.level().isClientSide()) {
+
+            if (collidesWithBlocks(nextPosition)) {
+                removeHitboxes();
+                this.discard();
+                return;
+            }
+        }
+
+        this.setPos(nextPosition);
+
         this.setDeltaMovement(
-                this.getDeltaMovement().scale(0.98)
+                movement.scale(0.98)
         );
 
-        // Keep every hitbox attached to the Gust.
         if (!this.level().isClientSide()) {
             updateHitboxPositions();
-
             checkWallImpacts();
         }
 
-        // Remove the Gust and all of its hitboxes after 150 ticks.
         if (!this.level().isClientSide() && this.tickCount >= 150) {
-
             removeHitboxes();
-
             this.discard();
         }
     }
 
-    /**
-     * Checks whether any entity that was hit by the Gust
-     * has collided with a solid block.
-     */
+    private boolean collidesWithBlocks(Vec3 position) {
+
+        double[][] points = {
+                {-0.45, 0.50, 0.00},
+                {-0.325, 0.625, 0.175},
+                {-0.20, 0.75, 0.30},
+                {-0.075, 0.875, 0.475},
+                {0.05, 1.00, 0.55},
+                {0.175, 1.125, 0.55},
+                {0.30, 1.25, 0.55},
+                {0.425, 1.375, 0.50},
+                {0.55, 1.50, 0.35},
+                {0.675, 1.625, 0.175},
+                {0.80, 1.75, 0.00}
+        };
+
+        for (double[] point : points) {
+
+            Vec3 worldPoint =
+                    localToWorldAtPosition(
+                            position,
+                            point[0],
+                            point[1],
+                            point[2]
+                    );
+
+            AABB box =
+                    new AABB(
+                            worldPoint.x - COLLISION_SIZE,
+                            worldPoint.y - COLLISION_SIZE,
+                            worldPoint.z - COLLISION_SIZE,
+                            worldPoint.x + COLLISION_SIZE,
+                            worldPoint.y + COLLISION_SIZE,
+                            worldPoint.z + COLLISION_SIZE
+                    );
+
+            if (!this.level().getBlockCollisions(this, box)
+                    .iterator()
+                    .hasNext()) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private Vec3 localToWorldAtPosition(
+            Vec3 position,
+            double x,
+            double y,
+            double z
+    ) {
+
+        Vec3 forward =
+                getGustDirection();
+
+        Vec3 up =
+                new Vec3(0, 1, 0);
+
+        if (Math.abs(forward.dot(up)) > 0.99) {
+            up = new Vec3(1, 0, 0);
+        }
+
+        Vec3 right =
+                forward.cross(up).normalize();
+
+        Vec3 realUp =
+                right.cross(forward).normalize();
+
+        return position
+                .add(right.scale(x))
+                .add(realUp.scale(y))
+                .add(forward.scale(z));
+    }
+
     private void checkWallImpacts() {
 
         if (!(this.level() instanceof ServerLevel serverLevel)) {
@@ -172,16 +223,14 @@ public class GustEntity extends Entity implements GeoEntity {
 
         while (iterator.hasNext()) {
 
-            LivingEntity entity = iterator.next();
+            LivingEntity entity =
+                    iterator.next();
 
-            // Stop watching dead or removed entities.
             if (!entity.isAlive() || entity.isRemoved()) {
                 iterator.remove();
                 continue;
             }
 
-            // Check the entity's current bounding box against
-            // solid blocks.
             if (entity.horizontalCollision) {
 
                 DamageSource damageSource =
@@ -189,71 +238,42 @@ public class GustEntity extends Entity implements GeoEntity {
                                 owner != null ? owner : entity
                         );
 
-                // Prevent the bonus damage from being blocked
-                // by Minecraft's normal damage immunity.
                 entity.invulnerableTime = 0;
 
-                // Wall impact bonus damage.
-                entity.hurtServer(serverLevel, damageSource, 4.0f);
+                entity.hurtServer(
+                        serverLevel,
+                        damageSource,
+                        4.0f
+                );
 
-                // Only apply the wall impact once.
                 iterator.remove();
             }
         }
     }
 
-    /**
-     * Creates all of the Gust's hitboxes immediately
-     * when the Gust is fired.
-     */
     public void createHitboxes() {
 
         if (!(this.level() instanceof ServerLevel serverLevel)) {
             return;
         }
 
-        // Don't create them twice.
         if (!this.hitboxes.isEmpty()) {
             return;
         }
 
-        // Hitbox 1
         createHitbox(serverLevel, -0.45, 0.50, 0.00);
-
-        // Hitbox 2
         createHitbox(serverLevel, -0.325, 0.625, 0.175);
-
-        // Hitbox 3
         createHitbox(serverLevel, -0.20, 0.75, 0.30);
-
-        // Hitbox 4
         createHitbox(serverLevel, -0.075, 0.875, 0.475);
-
-        // Hitbox 5
         createHitbox(serverLevel, 0.05, 1.00, 0.55);
-
-        // Hitbox 6
         createHitbox(serverLevel, 0.175, 1.125, 0.55);
-
-        // Hitbox 7
         createHitbox(serverLevel, 0.30, 1.25, 0.55);
-
-        // Hitbox 8
         createHitbox(serverLevel, 0.425, 1.375, 0.50);
-
-        // Hitbox 9
         createHitbox(serverLevel, 0.55, 1.50, 0.35);
-
-        // Hitbox 10
         createHitbox(serverLevel, 0.675, 1.625, 0.175);
-
-        // Hitbox 11
         createHitbox(serverLevel, 0.80, 1.75, 0.00);
     }
 
-    /**
-     * Creates one hitbox at a local position.
-     */
     private void createHitbox(
             ServerLevel serverLevel,
             double x,
@@ -267,7 +287,6 @@ public class GustEntity extends Entity implements GeoEntity {
                         serverLevel
                 );
 
-        // Give the hitbox a reference to this Gust.
         hitbox.setGust(this);
 
         hitbox.setPos(
@@ -279,83 +298,68 @@ public class GustEntity extends Entity implements GeoEntity {
         serverLevel.addFreshEntity(hitbox);
     }
 
-    /**
-     * Updates the positions of all hitboxes so that
-     * they follow the Gust as it moves and rotates.
-     */
     private void updateHitboxPositions() {
 
-        // Hitbox 1
         if (this.hitboxes.size() >= 1) {
             this.hitboxes.get(0).setPos(
                     this.localToWorld(-0.45, 0.50, 0.0)
             );
         }
 
-        // Hitbox 2
         if (this.hitboxes.size() >= 2) {
             this.hitboxes.get(1).setPos(
                     this.localToWorld(-0.325, 0.625, 0.175)
             );
         }
 
-        // Hitbox 3
         if (this.hitboxes.size() >= 3) {
             this.hitboxes.get(2).setPos(
                     this.localToWorld(-0.20, 0.75, 0.30)
             );
         }
 
-        // Hitbox 4
         if (this.hitboxes.size() >= 4) {
             this.hitboxes.get(3).setPos(
                     this.localToWorld(-0.075, 0.875, 0.475)
             );
         }
 
-        // Hitbox 5
         if (this.hitboxes.size() >= 5) {
             this.hitboxes.get(4).setPos(
                     this.localToWorld(0.05, 1.00, 0.55)
             );
         }
 
-        // Hitbox 6
         if (this.hitboxes.size() >= 6) {
             this.hitboxes.get(5).setPos(
                     this.localToWorld(0.175, 1.125, 0.55)
             );
         }
 
-        // Hitbox 7
         if (this.hitboxes.size() >= 7) {
             this.hitboxes.get(6).setPos(
                     this.localToWorld(0.30, 1.25, 0.55)
             );
         }
 
-        // Hitbox 8
         if (this.hitboxes.size() >= 8) {
             this.hitboxes.get(7).setPos(
                     this.localToWorld(0.425, 1.375, 0.50)
             );
         }
 
-        // Hitbox 9
         if (this.hitboxes.size() >= 9) {
             this.hitboxes.get(8).setPos(
                     this.localToWorld(0.55, 1.50, 0.35)
             );
         }
 
-        // Hitbox 10
         if (this.hitboxes.size() >= 10) {
             this.hitboxes.get(9).setPos(
                     this.localToWorld(0.675, 1.625, 0.175)
             );
         }
 
-        // Hitbox 11
         if (this.hitboxes.size() >= 11) {
             this.hitboxes.get(10).setPos(
                     this.localToWorld(0.80, 1.75, 0.0)
@@ -363,9 +367,6 @@ public class GustEntity extends Entity implements GeoEntity {
         }
     }
 
-    /**
-     * Removes all of the Gust's hitboxes.
-     */
     private void removeHitboxes() {
 
         for (GustHitboxEntity hitbox : this.hitboxes) {
@@ -378,9 +379,6 @@ public class GustEntity extends Entity implements GeoEntity {
         this.hitboxes.clear();
     }
 
-    /**
-     * Gets the direction the Gust is facing.
-     */
     public Vec3 getGustDirection() {
 
         float yaw =
@@ -405,46 +403,20 @@ public class GustEntity extends Entity implements GeoEntity {
         return new Vec3(x, y, z).normalize();
     }
 
-    /**
-     * Converts a point from the Gust's local coordinates
-     * into world coordinates.
-     *
-     * Local X = left/right across the crescent.
-     * Local Y = up/down across the crescent.
-     * Local Z = thickness/depth of the Gust.
-     */
     public Vec3 localToWorld(
             double x,
             double y,
             double z
     ) {
 
-        Vec3 forward =
-                getGustDirection();
-
-        Vec3 up =
-                new Vec3(0, 1, 0);
-
-        if (Math.abs(forward.dot(up)) > 0.99) {
-            up = new Vec3(1, 0, 0);
-        }
-
-        Vec3 right =
-                forward.cross(up).normalize();
-
-        Vec3 realUp =
-                right.cross(forward).normalize();
-
-        return this.position()
-                .add(right.scale(x))
-                .add(realUp.scale(y))
-                .add(forward.scale(z));
+        return localToWorldAtPosition(
+                this.position(),
+                x,
+                y,
+                z
+        );
     }
 
-    /**
-     * Checks whether a world-space point is inside the
-     * custom crescent-shaped collision volume.
-     */
     public boolean isPointInsideGust(
             Vec3 worldPoint
     ) {
@@ -477,12 +449,10 @@ public class GustEntity extends Entity implements GeoEntity {
         double localZ =
                 relative.dot(forward);
 
-        // Thickness of the Gust.
         if (Math.abs(localZ) > 0.18) {
             return false;
         }
 
-        // Outer circle.
         double outerRadius = 1.5;
 
         double outerDistance =
@@ -495,7 +465,6 @@ public class GustEntity extends Entity implements GeoEntity {
             return false;
         }
 
-        // Inner cut-out.
         double innerRadius = 1.15;
         double innerOffsetX = 0.45;
 
@@ -515,9 +484,6 @@ public class GustEntity extends Entity implements GeoEntity {
         return true;
     }
 
-    /**
-     * Gets a point a certain distance in front of the Gust.
-     */
     public Vec3 getCollisionPoint(
             double distance
     ) {
@@ -532,7 +498,6 @@ public class GustEntity extends Entity implements GeoEntity {
     public void registerControllers(
             AnimatableManager.ControllerRegistrar controllers
     ) {
-        // No animations yet.
     }
 
     @Override
