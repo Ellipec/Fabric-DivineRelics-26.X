@@ -44,7 +44,7 @@ public class ModItems {
     public static final Item TEMPEST_EDGE = registerItem("tempest-edge", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
     public static final Item FROSTMOURNE = registerItem("frostmourne", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
     public static final Item OLYMPUS_WRATH = registerItem("olympus-wrath", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
-    public static final Item JARNGREIPR = registerItem("jarngreipr", properties -> new Item(properties.axe(ModToolMaterials.DIVINE, 7f, -3.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
+    public static final Item JARNGREIPR = registerItem("jarngreipr", properties -> new JarngreiprItem(properties.axe(ModToolMaterials.DIVINE, 7f, -3.4f).fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
     public static final Item DRAGONS_RUIN = registerItem("dragons-ruin", properties -> new Item(properties.sword(ModToolMaterials.DIVINE, 4f, -2.4f) .fireResistant().component(DataComponents.UNBREAKABLE, Unit.INSTANCE)));
 
     private static ItemEnchantments crownEnchantments(HolderLookup.Provider registries) {
@@ -74,7 +74,7 @@ public class ModItems {
 
         return enchantments.toImmutable();
     }
-    
+
     private static ItemEnchantments aegisValorEnchantments(HolderLookup.Provider registries) {
         ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         var enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);

@@ -1,16 +1,15 @@
 package ellipec.divinerelics;
 
-import ellipec.divinerelics.Networking.packet.DragonStepPayloadC2S;
-import ellipec.divinerelics.Networking.packet.GaleDashPayloadC2S;
-import ellipec.divinerelics.Networking.packet.GustPayloadC2S;
-import ellipec.divinerelics.Networking.packet.ScaleShotPayloadC2S;
+import ellipec.divinerelics.Networking.packet.*;
+import ellipec.divinerelics.client.JarngreiprClientAnimation;
 import ellipec.divinerelics.entity.DragonScaleRenderer;
-import ellipec.divinerelics.entity.GustHitboxRenderer;
-import ellipec.divinerelics.entity.GustRenderer;
+import ellipec.divinerelics.entity.DivineSlashHitboxRenderer;
+import ellipec.divinerelics.entity.DivineSlashRenderer;
 import ellipec.divinerelics.entity.ModEntities;
 import ellipec.divinerelics.item.ModItems;
 import ellipec.divinerelics.keymapping.ModKeyMappings;
 import ellipec.divinerelics.powers.ability.DragonRuinAbilities;
+import ellipec.divinerelics.powers.ability.JarngreiprAbilities;
 import ellipec.divinerelics.powers.ability.TempestEdgeAbilities;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -25,21 +24,27 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DivineRelicsClient implements ClientModInitializer {
 
     private static int galeDashCooldown = 0;
-    private static int gustCooldown = 0;
+    private static int divineSlashCooldown = 0;
     private static int dragonStepCooldown = 0;
     private static int scaleShotCooldown = 0;
+    private static int overheadCooldown = 0;
 
     private static final List<String> cooldownOrder = new ArrayList<>();
 
-    private static final Identifier GUST_ICON =
+    private static final Map<Integer, Integer> jarngreiprMomentum =
+            new HashMap<>();
+
+    private static final Identifier DIVINE_SLASH_ICON =
             Identifier.fromNamespaceAndPath(
                     DivineRelics.MOD_ID,
-                    "textures/entity/gust_slash.png"
+                    "textures/entity/divine_slash.png"
             );
 
     @Override
@@ -49,6 +54,18 @@ public class DivineRelicsClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(
                 DivineRelicsClient::onEndTick
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                JarngreiprMomentumPayloadS2C.TYPE,
+                (payload, context) -> {
+                    context.client().execute(() -> {
+                        setMomentum(
+                                payload.entityId(),
+                                payload.momentum()
+                        );
+                    });
+                }
         );
 
         HudElementRegistry.addLast(
@@ -62,9 +79,9 @@ public class DivineRelicsClient implements ClientModInitializer {
         HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath(
                         DivineRelics.MOD_ID,
-                        "gust_cooldown"
+                        "divine_slash_cooldown"
                 ),
-                DivineRelicsClient::renderGustCooldown
+                DivineRelicsClient::renderDivineSlashCooldown
         );
 
         HudElementRegistry.addLast(
@@ -83,23 +100,60 @@ public class DivineRelicsClient implements ClientModInitializer {
                 DivineRelicsClient::renderScaleShotCooldown
         );
 
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath(
+                        DivineRelics.MOD_ID,
+                        "overhead_cooldown"
+                ),
+                DivineRelicsClient::renderOverheadCooldown
+        );
+
         EntityRenderers.register(
                 ModEntities.DRAGON_SCALE,
                 DragonScaleRenderer::new
         );
 
         EntityRenderers.register(
-                ModEntities.GUST,
-                GustRenderer::new
+                ModEntities.DIVINE_SLASH,
+                DivineSlashRenderer::new
         );
 
         EntityRenderers.register(
-                ModEntities.GUST_HITBOX,
-                GustHitboxRenderer::new
+                ModEntities.DIVINE_SLASH_HITBOX,
+                DivineSlashHitboxRenderer::new
+        );
+    }
+
+    public static void setMomentum(
+            int entityId,
+            int momentum
+    ) {
+
+        if (momentum <= 0) {
+            jarngreiprMomentum.remove(entityId);
+            return;
+        }
+
+        jarngreiprMomentum.put(
+                entityId,
+                momentum
+        );
+    }
+
+    public static int getMomentum(
+            int entityId
+    ) {
+
+        return jarngreiprMomentum.getOrDefault(
+                entityId,
+                0
         );
     }
 
     public static void onEndTick(Minecraft client) {
+
+        // Tick the Járngreipr player animation.
+        JarngreiprClientAnimation.tick();
 
         while (ModKeyMappings.PRIMARY_ABILITY.consumeClick()) {
 
@@ -132,27 +186,43 @@ public class DivineRelicsClient implements ClientModInitializer {
                 cooldownOrder.remove("dragon_step");
                 cooldownOrder.add("dragon_step");
             }
+
+            if (client.player != null
+                    && client.player.getMainHandItem().is(ModItems.JARNGREIPR)
+                    && overheadCooldown <= 0) {
+
+                // Start the local player-arm animation.
+                JarngreiprClientAnimation.start();
+
+                ClientPlayNetworking.send(
+                        new OverheadPayloadC2S()
+                );
+
+                overheadCooldown =
+                        JarngreiprAbilities.OVERHEAD_COOLDOWN;
+
+                cooldownOrder.remove("overhead");
+                cooldownOrder.add("overhead");
+            }
         }
 
         while (ModKeyMappings.SECONDARY_ABILITY.consumeClick()) {
 
-            // Tempest Edge - Gust
             if (client.player != null
                     && client.player.getMainHandItem().is(ModItems.TEMPEST_EDGE)
-                    && gustCooldown <= 0) {
+                    && divineSlashCooldown <= 0) {
 
                 ClientPlayNetworking.send(
-                        new GustPayloadC2S()
+                        new DivineSlashPayloadC2S()
                 );
 
-                gustCooldown =
-                        TempestEdgeAbilities.GUST_COOLDOWN;
+                divineSlashCooldown =
+                        TempestEdgeAbilities.DIVINE_SLASH_COOLDOWN;
 
-                cooldownOrder.remove("gust");
-                cooldownOrder.add("gust");
+                cooldownOrder.remove("divine_slash");
+                cooldownOrder.add("divine_slash");
             }
 
-            // Dragon's Ruin - Scale Shot
             if (client.player != null
                     && client.player.getMainHandItem().is(ModItems.DRAGONS_RUIN)
                     && scaleShotCooldown <= 0) {
@@ -173,8 +243,8 @@ public class DivineRelicsClient implements ClientModInitializer {
             galeDashCooldown--;
         }
 
-        if (gustCooldown > 0) {
-            gustCooldown--;
+        if (divineSlashCooldown > 0) {
+            divineSlashCooldown--;
         }
 
         if (dragonStepCooldown > 0) {
@@ -185,12 +255,16 @@ public class DivineRelicsClient implements ClientModInitializer {
             scaleShotCooldown--;
         }
 
+        if (overheadCooldown > 0) {
+            overheadCooldown--;
+        }
+
         if (galeDashCooldown <= 0) {
             cooldownOrder.remove("gale_dash");
         }
 
-        if (gustCooldown <= 0) {
-            cooldownOrder.remove("gust");
+        if (divineSlashCooldown <= 0) {
+            cooldownOrder.remove("divine_slash");
         }
 
         if (dragonStepCooldown <= 0) {
@@ -199,6 +273,10 @@ public class DivineRelicsClient implements ClientModInitializer {
 
         if (scaleShotCooldown <= 0) {
             cooldownOrder.remove("scale_shot");
+        }
+
+        if (overheadCooldown <= 0) {
+            cooldownOrder.remove("overhead");
         }
     }
 
@@ -228,17 +306,17 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
-    private static void renderGustCooldown(
+    private static void renderDivineSlashCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
     ) {
 
-        if (gustCooldown <= 0) {
+        if (divineSlashCooldown <= 0) {
             return;
         }
 
         int position =
-                cooldownOrder.indexOf("gust");
+                cooldownOrder.indexOf("divine_slash");
 
         if (position == -1) {
             return;
@@ -246,11 +324,11 @@ public class DivineRelicsClient implements ClientModInitializer {
 
         renderTextureCooldownBar(
                 graphics,
-                gustCooldown,
-                TempestEdgeAbilities.GUST_COOLDOWN,
+                divineSlashCooldown,
+                TempestEdgeAbilities.DIVINE_SLASH_COOLDOWN,
                 position,
                 0xFF55FFFF,
-                GUST_ICON
+                DIVINE_SLASH_ICON
         );
     }
 
@@ -303,6 +381,32 @@ public class DivineRelicsClient implements ClientModInitializer {
                 position,
                 0xFF230032,
                 new ItemStack(ModItems.DRAGON_SCALE)
+        );
+    }
+
+    private static void renderOverheadCooldown(
+            GuiGraphicsExtractor graphics,
+            DeltaTracker deltaTracker
+    ) {
+
+        if (overheadCooldown <= 0) {
+            return;
+        }
+
+        int position =
+                cooldownOrder.indexOf("overhead");
+
+        if (position == -1) {
+            return;
+        }
+
+        renderCooldownBar(
+                graphics,
+                overheadCooldown,
+                JarngreiprAbilities.OVERHEAD_COOLDOWN,
+                position,
+                0xFFFF6A00,
+                new ItemStack(ModItems.JARNGREIPR)
         );
     }
 

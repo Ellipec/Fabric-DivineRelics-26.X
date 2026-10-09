@@ -7,10 +7,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 
-public class GustHitboxRenderer
-        extends EntityRenderer<GustHitboxEntity, EntityRenderState> {
+public class DivineSlashHitboxRenderer
+        extends EntityRenderer<DivineSlashHitboxEntity, EntityRenderState> {
 
-    public GustHitboxRenderer(EntityRendererProvider.Context context) {
+    public DivineSlashHitboxRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 

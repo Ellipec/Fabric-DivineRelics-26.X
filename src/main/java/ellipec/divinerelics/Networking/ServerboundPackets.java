@@ -2,10 +2,12 @@ package ellipec.divinerelics.Networking;
 
 import ellipec.divinerelics.Networking.packet.DragonStepPayloadC2S;
 import ellipec.divinerelics.Networking.packet.GaleDashPayloadC2S;
-import ellipec.divinerelics.Networking.packet.GustPayloadC2S;
+import ellipec.divinerelics.Networking.packet.DivineSlashPayloadC2S;
 import ellipec.divinerelics.Networking.packet.ScaleShotPayloadC2S;
+import ellipec.divinerelics.Networking.packet.OverheadPayloadC2S;
 import ellipec.divinerelics.powers.ability.DragonRuinAbilities;
 import ellipec.divinerelics.powers.ability.TempestEdgeAbilities;
+import ellipec.divinerelics.powers.ability.JarngreiprAbilities;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class ServerboundPackets {
@@ -40,10 +42,19 @@ public class ServerboundPackets {
         );
 
         ServerPlayNetworking.registerGlobalReceiver(
-                GustPayloadC2S.TYPE,
+                DivineSlashPayloadC2S.TYPE,
                 (payload, context) -> {
                     context.server().execute(() -> {
-                        TempestEdgeAbilities.gust(context.player());
+                        TempestEdgeAbilities.divineSlash(context.player());
+                    });
+                }
+        );
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                OverheadPayloadC2S.TYPE,
+                (payload, context) -> {
+                    context.server().execute(() -> {
+                        JarngreiprAbilities.overhead(context.player());
                     });
                 }
         );

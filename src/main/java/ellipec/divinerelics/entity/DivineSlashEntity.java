@@ -17,18 +17,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
-public class GustEntity extends Entity implements GeoEntity {
+public class DivineSlashEntity extends Entity implements GeoEntity {
 
     private final AnimatableInstanceCache geoCache =
             GeckoLibUtil.createInstanceCache(this);
 
-    private final List<GustHitboxEntity> hitboxes =
+    private final List<DivineSlashHitboxEntity> hitboxes =
             new ArrayList<>();
 
     private LivingEntity owner;
@@ -36,13 +35,12 @@ public class GustEntity extends Entity implements GeoEntity {
     private final List<LivingEntity> wallImpactTargets =
             new ArrayList<>();
 
-    private final Map<UUID, Long> gustImmunityTimes =
-            new HashMap<>();
-
     private static final double COLLISION_SIZE = 0.05;
+    private static final float DAMAGE = 20.4f;
+    private static final double KNOCKBACK_STRENGTH = 3.0;
 
-    public GustEntity(
-            EntityType<? extends GustEntity> entityType,
+    public DivineSlashEntity(
+            EntityType<? extends DivineSlashEntity> entityType,
             Level level
     ) {
         super(entityType, level);
@@ -56,40 +54,77 @@ public class GustEntity extends Entity implements GeoEntity {
         return this.owner;
     }
 
-    public boolean isGustImmune(LivingEntity entity) {
+    public void triggerEntityHit() {
 
-        Long firstHitTick =
-                gustImmunityTimes.get(entity.getUUID());
-
-        if (firstHitTick == null) {
-            return false;
+        if (this.isRemoved()) {
+            return;
         }
 
-        long elapsed =
-                (long) this.tickCount - firstHitTick;
-
-        if (elapsed < 10) {
-            return false;
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return;
         }
 
-        if (elapsed < 110) {
-            return true;
+        Set<LivingEntity> targets =
+                new HashSet<>();
+
+        for (DivineSlashHitboxEntity hitbox : hitboxes) {
+
+            if (hitbox.isRemoved()) {
+                continue;
+            }
+
+            List<LivingEntity> entities =
+                    serverLevel.getEntitiesOfClass(
+                            LivingEntity.class,
+                            hitbox.getBoundingBox(),
+                            entity -> entity.isAlive()
+                    );
+
+            for (LivingEntity entity : entities) {
+
+                if (entity == owner) {
+                    continue;
+                }
+
+                targets.add(entity);
+            }
         }
 
-        gustImmunityTimes.remove(entity.getUUID());
-
-        return false;
-    }
-
-    public void startGustImmunity(LivingEntity entity) {
-
-        if (!gustImmunityTimes.containsKey(entity.getUUID())) {
-
-            gustImmunityTimes.put(
-                    entity.getUUID(),
-                    (long) this.tickCount
-            );
+        if (owner == null) {
+            removeHitboxes();
+            this.discard();
+            return;
         }
+
+        DamageSource damageSource =
+                serverLevel.damageSources().mobAttack(owner);
+        Vec3 direction =
+                getDivineSlashDirection();
+
+        for (LivingEntity entity : targets) {
+
+            entity.invulnerableTime = 0;
+
+            if (entity.hurtServer(
+                    serverLevel,
+                    damageSource,
+                    DAMAGE
+            )) {
+
+                entity.push(
+                        direction.x * KNOCKBACK_STRENGTH,
+                        0.15,
+                        direction.z * KNOCKBACK_STRENGTH
+                );
+
+                entity.hurtMarked = true;
+
+                trackWallImpact(entity);
+            }
+        }
+
+        removeHitboxes();
+        this.discard();
     }
 
     public void trackWallImpact(LivingEntity entity) {
@@ -191,7 +226,7 @@ public class GustEntity extends Entity implements GeoEntity {
     ) {
 
         Vec3 forward =
-                getGustDirection();
+                getDivineSlashDirection();
 
         Vec3 up =
                 new Vec3(0, 1, 0);
@@ -281,13 +316,13 @@ public class GustEntity extends Entity implements GeoEntity {
             double z
     ) {
 
-        GustHitboxEntity hitbox =
-                new GustHitboxEntity(
-                        ModEntities.GUST_HITBOX,
+        DivineSlashHitboxEntity hitbox =
+                new DivineSlashHitboxEntity(
+                        ModEntities.DIVINE_SLASH_HITBOX,
                         serverLevel
                 );
 
-        hitbox.setGust(this);
+        hitbox.setDivineSlash(this);
 
         hitbox.setPos(
                 this.localToWorld(x, y, z)
@@ -369,7 +404,7 @@ public class GustEntity extends Entity implements GeoEntity {
 
     private void removeHitboxes() {
 
-        for (GustHitboxEntity hitbox : this.hitboxes) {
+        for (DivineSlashHitboxEntity hitbox : this.hitboxes) {
 
             if (!hitbox.isRemoved()) {
                 hitbox.discard();
@@ -379,7 +414,7 @@ public class GustEntity extends Entity implements GeoEntity {
         this.hitboxes.clear();
     }
 
-    public Vec3 getGustDirection() {
+    public Vec3 getDivineSlashDirection() {
 
         float yaw =
                 this.getYRot() *
@@ -417,12 +452,12 @@ public class GustEntity extends Entity implements GeoEntity {
         );
     }
 
-    public boolean isPointInsideGust(
+    public boolean isPointInsideDivineSlash(
             Vec3 worldPoint
     ) {
 
         Vec3 forward =
-                getGustDirection();
+                getDivineSlashDirection();
 
         Vec3 up =
                 new Vec3(0, 1, 0);
@@ -489,7 +524,7 @@ public class GustEntity extends Entity implements GeoEntity {
     ) {
 
         return this.position().add(
-                this.getGustDirection()
+                this.getDivineSlashDirection()
                         .scale(distance)
         );
     }

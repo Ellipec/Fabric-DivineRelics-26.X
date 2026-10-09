@@ -29,40 +29,40 @@ public class ModEntities {
                     .build(DRAGON_SCALE_KEY);
 
 
-    private static final ResourceKey<EntityType<?>> GUST_KEY =
+    private static final ResourceKey<EntityType<?>> DIVINE_SLASH_KEY =
             ResourceKey.create(
                     Registries.ENTITY_TYPE,
                     Identifier.fromNamespaceAndPath(
                             DivineRelics.MOD_ID,
-                            "gust"
+                            "divine_slash"
                     )
             );
 
-    public static final EntityType<GustEntity> GUST =
-            EntityType.Builder.<GustEntity>of(
-                            GustEntity::new,
+    public static final EntityType<DivineSlashEntity> DIVINE_SLASH =
+            EntityType.Builder.<DivineSlashEntity>of(
+                            DivineSlashEntity::new,
                             MobCategory.MISC
                     )
                     .sized(0.0001f, 0.0001f)
-                    .build(GUST_KEY);
+                    .build(DIVINE_SLASH_KEY);
 
 
-    private static final ResourceKey<EntityType<?>> GUST_HITBOX_KEY =
+    private static final ResourceKey<EntityType<?>> DIVINE_SLASH_HITBOX_KEY =
             ResourceKey.create(
                     Registries.ENTITY_TYPE,
                     Identifier.fromNamespaceAndPath(
                             DivineRelics.MOD_ID,
-                            "gust_hitbox"
+                            "divine_slash_hitbox"
                     )
             );
 
-    public static final EntityType<GustHitboxEntity> GUST_HITBOX =
-            EntityType.Builder.<GustHitboxEntity>of(
-                            GustHitboxEntity::new,
+    public static final EntityType<DivineSlashHitboxEntity> DIVINE_SLASH_HITBOX =
+            EntityType.Builder.<DivineSlashHitboxEntity>of(
+                            DivineSlashHitboxEntity::new,
                             MobCategory.MISC
                     )
                     .sized(0.25f, 0.25f)
-                    .build(GUST_HITBOX_KEY);
+                    .build(DIVINE_SLASH_HITBOX_KEY);
 
 
     public static void register() {
@@ -75,14 +75,14 @@ public class ModEntities {
 
         Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
-                GUST_KEY,
-                GUST
+                DIVINE_SLASH_KEY,
+                DIVINE_SLASH
         );
 
         Registry.register(
                 BuiltInRegistries.ENTITY_TYPE,
-                GUST_HITBOX_KEY,
-                GUST_HITBOX
+                DIVINE_SLASH_HITBOX_KEY,
+                DIVINE_SLASH_HITBOX
         );
     }
 }

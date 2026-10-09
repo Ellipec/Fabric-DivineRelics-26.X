@@ -40,7 +40,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerators.generateFlatItem(ModItems.EMBERFANG, ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.TEMPEST_EDGE, ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.FROSTMOURNE, ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModelGenerators.generateFlatItem(ModItems.JARNGREIPR, ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModelGenerators.declareCustomModelItem(ModItems.JARNGREIPR);
         itemModelGenerators.generateFlatItem(ModItems.DRAGONS_RUIN, ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModelGenerators.generateFlatItem(ModItems.OLYMPUS_WRATH, ModelTemplates.FLAT_HANDHELD_ITEM);
 

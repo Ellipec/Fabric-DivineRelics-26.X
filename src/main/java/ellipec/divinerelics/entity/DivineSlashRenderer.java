@@ -12,22 +12,20 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
-public class GustRenderer extends GeoEntityRenderer<GustEntity, EntityRenderState> {
+public class DivineSlashRenderer extends GeoEntityRenderer<DivineSlashEntity, EntityRenderState> {
 
-    public GustRenderer(EntityRendererProvider.Context context) {
-        super(context, new GustModel());
+    public DivineSlashRenderer(EntityRendererProvider.Context context) {
+        super(context, new DivineSlashModel());
     }
 
     @Override
     public boolean shouldRender(
-            GustEntity entity,
+            DivineSlashEntity entity,
             Frustum frustum,
             double camX,
             double camY,
             double camZ
     ) {
-        // Always render the Gust.
-        // Its actual entity bounding box is tiny, but the model is much larger.
         return true;
     }
 

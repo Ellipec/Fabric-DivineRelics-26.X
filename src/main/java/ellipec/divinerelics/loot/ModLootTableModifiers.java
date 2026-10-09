@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -95,6 +96,16 @@ public class ModLootTableModifiers {
 
             builder.pool(poolBuilder.build());
         }
+        // PLAYER HEAD - 100% chance
+        if (key.identifier().equals(Identifier.withDefaultNamespace("entities/player"))) {
+            LootPool.Builder poolBuilder = LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(1f))
+                    .add(LootItem.lootTableItem(Items.PLAYER_HEAD))
+                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)).build());
+
+            builder.pool(poolBuilder.build());
+        }
 
         // OMINOUS TRIAL CHAMBER UNIQUE - 5% chance
         if (BuiltInLootTables.TRIAL_CHAMBERS_REWARD_OMINOUS_UNIQUE.equals(key)) {
@@ -102,6 +113,17 @@ public class ModLootTableModifiers {
                     .setRolls(ConstantValue.exactly(1))
                     .when(LootItemRandomChanceCondition.randomChance(0.05f))
                     .add(LootItem.lootTableItem(ModItems.HEART_OF_AEGIS))
+                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)).build());
+
+            builder.pool(poolBuilder.build());
+        }
+
+        // OMINOUS TRIAL CHAMBER UNIQUE - 7.5% chance
+        if (BuiltInLootTables.TRIAL_CHAMBERS_REWARD_OMINOUS_UNIQUE.equals(key)) {
+            LootPool.Builder poolBuilder = LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(1))
+                    .when(LootItemRandomChanceCondition.randomChance(0.075f))
+                    .add(LootItem.lootTableItem(ModItems.HEART_OF_THE_SKY))
                     .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1)).build());
 
             builder.pool(poolBuilder.build());

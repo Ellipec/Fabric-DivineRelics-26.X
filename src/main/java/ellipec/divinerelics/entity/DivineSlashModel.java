@@ -4,16 +4,19 @@ import com.geckolib.model.GeoModel;
 import com.geckolib.renderer.base.GeoRenderState;
 import net.minecraft.resources.Identifier;
 
-public class GustModel extends GeoModel<GustEntity> {
+public class DivineSlashModel extends GeoModel<DivineSlashEntity> {
 
     private final Identifier model =
-            Identifier.fromNamespaceAndPath("divinerelics", "gust_slash");
+            Identifier.fromNamespaceAndPath("divinerelics", "divine_slash");
 
     private final Identifier texture =
-            Identifier.fromNamespaceAndPath("divinerelics", "textures/entity/gust_slash.png");
+            Identifier.fromNamespaceAndPath(
+                    "divinerelics",
+                    "textures/entity/divine_slash.png"
+            );
 
     private final Identifier animation =
-            Identifier.fromNamespaceAndPath("divinerelics", "gust_slash");
+            Identifier.fromNamespaceAndPath("divinerelics", "divine_slash");
 
     @Override
     public Identifier getModelResource(GeoRenderState renderState) {
@@ -26,7 +29,7 @@ public class GustModel extends GeoModel<GustEntity> {
     }
 
     @Override
-    public Identifier getAnimationResource(GustEntity animatable) {
+    public Identifier getAnimationResource(DivineSlashEntity animatable) {
         return this.animation;
     }
 }
