@@ -4,10 +4,13 @@ import com.geckolib.animatable.GeoItem;
 import ellipec.divinerelics.item.JarngreiprItem;
 import ellipec.divinerelics.item.ModItems;
 import ellipec.divinerelics.powers.passive.JarngreiprPassives;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -123,9 +126,88 @@ public class JarngreiprAbilities {
                 player.position().add(
                         0.0,
                         1.0,
-                        0.
-
+                        0.0
                 );
+
+        // Create the ground impact particles
+
+        if (player.level() instanceof ServerLevel serverLevel) {
+
+            BlockState groundState =
+                    serverLevel.getBlockState(
+                            player.blockPosition().below()
+                    );
+
+            if (!groundState.isAir()) {
+
+                BlockParticleOption debris =
+                        new BlockParticleOption(
+                                ParticleTypes.BLOCK,
+                                groundState
+                        );
+
+                var random =
+                        serverLevel.getRandom();
+
+                for (int i = 0; i < 50; i++) {
+
+                    double x =
+                            player.getX()
+                                    + (random.nextDouble() - 0.5) * 3.0;
+
+                    double z =
+                            player.getZ()
+                                    + (random.nextDouble() - 0.5) * 3.0;
+
+                    double y =
+                            player.getY() + 0.05;
+
+                    double outwardX =
+                            x - player.getX();
+
+                    double outwardZ =
+                            z - player.getZ();
+
+                    double length =
+                            Math.sqrt(
+                                    outwardX * outwardX
+                                            + outwardZ * outwardZ
+                            );
+
+                    if (length > 0.0) {
+
+                        outwardX /= length;
+                        outwardZ /= length;
+                    }
+
+                    double speed =
+                            0.15
+                                    + random.nextDouble() * 0.25;
+
+                    double velocityX =
+                            outwardX * speed;
+
+                    double velocityZ =
+                            outwardZ * speed;
+
+                    double velocityY =
+                            0.25
+                                    + random.nextDouble() * 0.45;
+
+                    serverLevel.sendParticles(
+                            debris,
+                            x,
+                            y,
+                            z,
+                            2,
+                            velocityX,
+                            velocityY,
+                            velocityZ,
+                            1.0
+                    );
+                }
+            }
+        }
 
         // Hitbox: 3 blocks wide, tall, and deep
 
