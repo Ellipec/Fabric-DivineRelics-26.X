@@ -1,3 +1,4 @@
+
 package ellipec.divinerelics;
 
 import ellipec.divinerelics.Networking.packet.*;
@@ -36,6 +37,10 @@ public class DivineRelicsClient implements ClientModInitializer {
     private static int scaleShotCooldown = 0;
     private static int overheadCooldown = 0;
 
+    private static boolean brutalSwingKeyWasDown = false;
+    private static int brutalSwingChargeTicks = 0;
+    private static boolean brutalSwingCharging = false;
+
     private static final List<String> cooldownOrder = new ArrayList<>();
 
     private static final Map<Integer, Integer> jarngreiprMomentum =
@@ -46,6 +51,10 @@ public class DivineRelicsClient implements ClientModInitializer {
                     DivineRelics.MOD_ID,
                     "textures/entity/divine_slash.png"
             );
+
+    public static boolean isBrutalSwingCharging() {
+        return brutalSwingCharging;
+    }
 
     @Override
     public void onInitializeClient() {
@@ -108,6 +117,14 @@ public class DivineRelicsClient implements ClientModInitializer {
                 DivineRelicsClient::renderOverheadCooldown
         );
 
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath(
+                        DivineRelics.MOD_ID,
+                        "brutal_swing_charge"
+                ),
+                DivineRelicsClient::renderBrutalSwingCharge
+        );
+
         EntityRenderers.register(
                 ModEntities.DRAGON_SCALE,
                 DragonScaleRenderer::new
@@ -124,36 +141,24 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
-    public static void setMomentum(
-            int entityId,
-            int momentum
-    ) {
+    public static void setMomentum(int entityId, int momentum) {
 
         if (momentum <= 0) {
             jarngreiprMomentum.remove(entityId);
             return;
         }
 
-        jarngreiprMomentum.put(
-                entityId,
-                momentum
-        );
+        jarngreiprMomentum.put(entityId, momentum);
     }
 
-    public static int getMomentum(
-            int entityId
-    ) {
-
-        return jarngreiprMomentum.getOrDefault(
-                entityId,
-                0
-        );
+    public static int getMomentum(int entityId) {
+        return jarngreiprMomentum.getOrDefault(entityId, 0);
     }
 
     public static void onEndTick(Minecraft client) {
 
-        // Tick the Járngreipr player animation.
         JarngreiprClientAnimation.tick();
+        handleBrutalSwingInput(client);
 
         while (ModKeyMappings.PRIMARY_ABILITY.consumeClick()) {
 
@@ -161,9 +166,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                     && client.player.getMainHandItem().is(ModItems.TEMPEST_EDGE)
                     && galeDashCooldown <= 0) {
 
-                ClientPlayNetworking.send(
-                        new GaleDashPayloadC2S()
-                );
+                ClientPlayNetworking.send(new GaleDashPayloadC2S());
 
                 galeDashCooldown =
                         TempestEdgeAbilities.GALE_DASH_COOLDOWN;
@@ -176,9 +179,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                     && client.player.getMainHandItem().is(ModItems.DRAGONS_RUIN)
                     && dragonStepCooldown <= 0) {
 
-                ClientPlayNetworking.send(
-                        new DragonStepPayloadC2S()
-                );
+                ClientPlayNetworking.send(new DragonStepPayloadC2S());
 
                 dragonStepCooldown =
                         DragonRuinAbilities.DRAGONSTEP_COOLDOWN;
@@ -191,12 +192,9 @@ public class DivineRelicsClient implements ClientModInitializer {
                     && client.player.getMainHandItem().is(ModItems.JARNGREIPR)
                     && overheadCooldown <= 0) {
 
-                // Start the local player-arm animation.
                 JarngreiprClientAnimation.start();
 
-                ClientPlayNetworking.send(
-                        new OverheadPayloadC2S()
-                );
+                ClientPlayNetworking.send(new OverheadPayloadC2S());
 
                 overheadCooldown =
                         JarngreiprAbilities.OVERHEAD_COOLDOWN;
@@ -212,9 +210,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                     && client.player.getMainHandItem().is(ModItems.TEMPEST_EDGE)
                     && divineSlashCooldown <= 0) {
 
-                ClientPlayNetworking.send(
-                        new DivineSlashPayloadC2S()
-                );
+                ClientPlayNetworking.send(new DivineSlashPayloadC2S());
 
                 divineSlashCooldown =
                         TempestEdgeAbilities.DIVINE_SLASH_COOLDOWN;
@@ -227,9 +223,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                     && client.player.getMainHandItem().is(ModItems.DRAGONS_RUIN)
                     && scaleShotCooldown <= 0) {
 
-                ClientPlayNetworking.send(
-                        new ScaleShotPayloadC2S()
-                );
+                ClientPlayNetworking.send(new ScaleShotPayloadC2S());
 
                 scaleShotCooldown =
                         DragonRuinAbilities.SCALE_SHOT_COOLDOWN;
@@ -239,62 +233,88 @@ public class DivineRelicsClient implements ClientModInitializer {
             }
         }
 
-        if (galeDashCooldown > 0) {
-            galeDashCooldown--;
+        if (galeDashCooldown > 0) galeDashCooldown--;
+        if (divineSlashCooldown > 0) divineSlashCooldown--;
+        if (dragonStepCooldown > 0) dragonStepCooldown--;
+        if (scaleShotCooldown > 0) scaleShotCooldown--;
+        if (overheadCooldown > 0) overheadCooldown--;
+
+        if (galeDashCooldown <= 0) cooldownOrder.remove("gale_dash");
+        if (divineSlashCooldown <= 0) cooldownOrder.remove("divine_slash");
+        if (dragonStepCooldown <= 0) cooldownOrder.remove("dragon_step");
+        if (scaleShotCooldown <= 0) cooldownOrder.remove("scale_shot");
+        if (overheadCooldown <= 0) cooldownOrder.remove("overhead");
+    }
+
+    private static void handleBrutalSwingInput(Minecraft client) {
+
+        boolean holdingWeapon =
+                client.player != null
+                        && client.player.getMainHandItem()
+                        .is(ModItems.JARNGREIPR);
+
+        boolean keyDown =
+                holdingWeapon
+                        && ModKeyMappings.SECONDARY_ABILITY.isDown();
+
+        if (brutalSwingCharging && client.options != null) {
+            client.options.keyJump.setDown(false);
         }
 
-        if (divineSlashCooldown > 0) {
-            divineSlashCooldown--;
+        if (keyDown && !brutalSwingKeyWasDown) {
+
+            ClientPlayNetworking.send(new BrutalSwingStartPayloadC2S());
+
+            brutalSwingCharging = true;
+            brutalSwingChargeTicks = 0;
+
+            JarngreiprClientAnimation.startCharging();
+
+            client.options.keyJump.setDown(false);
         }
 
-        if (dragonStepCooldown > 0) {
-            dragonStepCooldown--;
+        if (keyDown && brutalSwingCharging) {
+
+            brutalSwingChargeTicks = Math.min(
+                    JarngreiprAbilities.BRUTAL_SWING_MAX_CHARGE,
+                    brutalSwingChargeTicks + 1
+            );
+
+            float chargeProgress =
+                    brutalSwingChargeTicks
+                            / (float) JarngreiprAbilities.BRUTAL_SWING_MAX_CHARGE;
+
+            JarngreiprClientAnimation.updateCharge(chargeProgress);
+
+            client.options.keyJump.setDown(false);
         }
 
-        if (scaleShotCooldown > 0) {
-            scaleShotCooldown--;
+        if (!keyDown && brutalSwingKeyWasDown) {
+
+            if (brutalSwingCharging) {
+
+                ClientPlayNetworking.send(
+                        new BrutalSwingReleasePayloadC2S()
+                );
+
+                JarngreiprClientAnimation.startSwing();
+
+                brutalSwingCharging = false;
+                brutalSwingChargeTicks = 0;
+            }
         }
 
-        if (overheadCooldown > 0) {
-            overheadCooldown--;
-        }
-
-        if (galeDashCooldown <= 0) {
-            cooldownOrder.remove("gale_dash");
-        }
-
-        if (divineSlashCooldown <= 0) {
-            cooldownOrder.remove("divine_slash");
-        }
-
-        if (dragonStepCooldown <= 0) {
-            cooldownOrder.remove("dragon_step");
-        }
-
-        if (scaleShotCooldown <= 0) {
-            cooldownOrder.remove("scale_shot");
-        }
-
-        if (overheadCooldown <= 0) {
-            cooldownOrder.remove("overhead");
-        }
+        brutalSwingKeyWasDown = keyDown;
     }
 
     private static void renderGaleDashCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
     ) {
+        if (galeDashCooldown <= 0) return;
 
-        if (galeDashCooldown <= 0) {
-            return;
-        }
-
-        int position =
-                cooldownOrder.indexOf("gale_dash");
-
-        if (position == -1) {
-            return;
-        }
+        int position = cooldownOrder.indexOf("gale_dash");
+        if (position == -1) return;
 
         renderCooldownBar(
                 graphics,
@@ -310,17 +330,10 @@ public class DivineRelicsClient implements ClientModInitializer {
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
     ) {
+        if (divineSlashCooldown <= 0) return;
 
-        if (divineSlashCooldown <= 0) {
-            return;
-        }
-
-        int position =
-                cooldownOrder.indexOf("divine_slash");
-
-        if (position == -1) {
-            return;
-        }
+        int position = cooldownOrder.indexOf("divine_slash");
+        if (position == -1) return;
 
         renderTextureCooldownBar(
                 graphics,
@@ -336,17 +349,10 @@ public class DivineRelicsClient implements ClientModInitializer {
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
     ) {
+        if (dragonStepCooldown <= 0) return;
 
-        if (dragonStepCooldown <= 0) {
-            return;
-        }
-
-        int position =
-                cooldownOrder.indexOf("dragon_step");
-
-        if (position == -1) {
-            return;
-        }
+        int position = cooldownOrder.indexOf("dragon_step");
+        if (position == -1) return;
 
         renderCooldownBar(
                 graphics,
@@ -362,17 +368,10 @@ public class DivineRelicsClient implements ClientModInitializer {
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
     ) {
+        if (scaleShotCooldown <= 0) return;
 
-        if (scaleShotCooldown <= 0) {
-            return;
-        }
-
-        int position =
-                cooldownOrder.indexOf("scale_shot");
-
-        if (position == -1) {
-            return;
-        }
+        int position = cooldownOrder.indexOf("scale_shot");
+        if (position == -1) return;
 
         renderCooldownBar(
                 graphics,
@@ -388,17 +387,10 @@ public class DivineRelicsClient implements ClientModInitializer {
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
     ) {
+        if (overheadCooldown <= 0) return;
 
-        if (overheadCooldown <= 0) {
-            return;
-        }
-
-        int position =
-                cooldownOrder.indexOf("overhead");
-
-        if (position == -1) {
-            return;
-        }
+        int position = cooldownOrder.indexOf("overhead");
+        if (position == -1) return;
 
         renderCooldownBar(
                 graphics,
@@ -407,6 +399,76 @@ public class DivineRelicsClient implements ClientModInitializer {
                 position,
                 0xFFFF6A00,
                 new ItemStack(ModItems.JARNGREIPR)
+        );
+    }
+
+    private static void renderBrutalSwingCharge(
+            GuiGraphicsExtractor graphics,
+            DeltaTracker deltaTracker
+    ) {
+
+        if (!brutalSwingCharging) {
+            return;
+        }
+
+        int screenWidth =
+                Minecraft.getInstance()
+                        .getWindow()
+                        .getGuiScaledWidth();
+
+        int screenHeight =
+                Minecraft.getInstance()
+                        .getWindow()
+                        .getGuiScaledHeight();
+
+        int barWidth = 80;
+        int barHeight = 5;
+        int iconSize = 9;
+        int iconGap = 4;
+
+        int totalWidth = iconSize + iconGap + barWidth;
+        int startX = (screenWidth - totalWidth) / 2;
+        int x = startX + iconSize + iconGap;
+
+        int position = cooldownOrder.size();
+        int y = screenHeight - 47 - (position * 11);
+
+        graphics.pose().pushMatrix();
+
+        graphics.pose().translate(startX + 4.5f, y + 2.5f);
+        graphics.pose().scale(0.5625f, 0.5625f);
+        graphics.pose().translate(-8.0f, -8.0f);
+
+        graphics.item(new ItemStack(ModItems.JARNGREIPR), 0, 0);
+
+        graphics.pose().popMatrix();
+
+        graphics.fill(
+                x,
+                y,
+                x + barWidth,
+                y + barHeight,
+                0xAA000000
+        );
+
+        float progress = Math.min(
+                1.0f,
+                brutalSwingChargeTicks
+                        / (float) JarngreiprAbilities.BRUTAL_SWING_MAX_CHARGE
+        );
+
+        int fillWidth = Math.round((barWidth - 2) * progress);
+
+        int colour = progress >= 1.0f
+                ? 0xFFFFD700
+                : 0xFF9B59FF;
+
+        graphics.fill(
+                x + 1,
+                y + 1,
+                x + 1 + fillWidth,
+                y + barHeight - 1,
+                colour
         );
     }
 
@@ -431,50 +493,23 @@ public class DivineRelicsClient implements ClientModInitializer {
 
         int barWidth = 80;
         int barHeight = 5;
-
         float iconScale = 0.5625f;
 
         int iconSize = 9;
         int iconGap = 4;
 
-        int totalWidth =
-                iconSize
-                        + iconGap
-                        + barWidth;
-
-        int startX =
-                (screenWidth - totalWidth) / 2;
-
-        int x =
-                startX + iconSize + iconGap;
-
-        int y =
-                screenHeight
-                        - 47
-                        - (position * 11);
+        int totalWidth = iconSize + iconGap + barWidth;
+        int startX = (screenWidth - totalWidth) / 2;
+        int x = startX + iconSize + iconGap;
+        int y = screenHeight - 47 - (position * 11);
 
         graphics.pose().pushMatrix();
 
-        graphics.pose().translate(
-                startX + 4.5f,
-                y + 2.5f
-        );
+        graphics.pose().translate(startX + 4.5f, y + 2.5f);
+        graphics.pose().scale(iconScale, iconScale);
+        graphics.pose().translate(-8.0f, -8.0f);
 
-        graphics.pose().scale(
-                iconScale,
-                iconScale
-        );
-
-        graphics.pose().translate(
-                -8.0f,
-                -8.0f
-        );
-
-        graphics.item(
-                icon,
-                0,
-                0
-        );
+        graphics.item(icon, 0, 0);
 
         graphics.pose().popMatrix();
 
@@ -486,10 +521,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                 0xAA000000
         );
 
-        int fillWidth =
-                (barWidth - 2)
-                        * cooldown
-                        / maxCooldown;
+        int fillWidth = (barWidth - 2) * cooldown / maxCooldown;
 
         graphics.fill(
                 x + 1,
@@ -526,21 +558,10 @@ public class DivineRelicsClient implements ClientModInitializer {
         int iconHeight = 15;
         int iconGap = 4;
 
-        int totalWidth =
-                iconWidth
-                        + iconGap
-                        + barWidth;
-
-        int startX =
-                (screenWidth - totalWidth) / 2;
-
-        int x =
-                startX + iconWidth + iconGap;
-
-        int y =
-                screenHeight
-                        - 47
-                        - (position * 11);
+        int totalWidth = iconWidth + iconGap + barWidth;
+        int startX = (screenWidth - totalWidth) / 2;
+        int x = startX + iconWidth + iconGap;
+        int y = screenHeight - 47 - (position * 11);
 
         graphics.pose().pushMatrix();
 
@@ -549,9 +570,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                 y + 2.5f
         );
 
-        graphics.pose().rotate(
-                (float) Math.toRadians(225f)
-        );
+        graphics.pose().rotate((float) Math.toRadians(225f));
 
         graphics.blit(
                 RenderPipelines.GUI_TEXTURED,
@@ -579,10 +598,7 @@ public class DivineRelicsClient implements ClientModInitializer {
                 0xAA000000
         );
 
-        int fillWidth =
-                (barWidth - 2)
-                        * cooldown
-                        / maxCooldown;
+        int fillWidth = (barWidth - 2) * cooldown / maxCooldown;
 
         graphics.fill(
                 x + 1,

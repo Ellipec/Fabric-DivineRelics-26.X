@@ -5,6 +5,7 @@
 	"mixins": [
 		"ExampleMixin",
 		"JarngreiprMomentumMixin",
+		"LegendaryCrafterMixin",
 		"LegendaryCraftingMixin",
 		"LegendaryCraftingPreventMixin"
 	],
@@ -15,6 +16,7 @@
 		"requireAnnotations": true
 	},
 	"client": [
+		"BrutalSwingJumpMixin",
 		"JarngreiprFirstPersonMixin",
 		"JarngreiprMomentumRenderMixin",
 		"JarngreiprPlayerModelMixin"

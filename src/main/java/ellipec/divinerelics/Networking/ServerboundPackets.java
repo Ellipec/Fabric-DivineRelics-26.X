@@ -1,10 +1,6 @@
 package ellipec.divinerelics.Networking;
 
-import ellipec.divinerelics.Networking.packet.DragonStepPayloadC2S;
-import ellipec.divinerelics.Networking.packet.GaleDashPayloadC2S;
-import ellipec.divinerelics.Networking.packet.DivineSlashPayloadC2S;
-import ellipec.divinerelics.Networking.packet.ScaleShotPayloadC2S;
-import ellipec.divinerelics.Networking.packet.OverheadPayloadC2S;
+import ellipec.divinerelics.Networking.packet.*;
 import ellipec.divinerelics.powers.ability.DragonRuinAbilities;
 import ellipec.divinerelics.powers.ability.TempestEdgeAbilities;
 import ellipec.divinerelics.powers.ability.JarngreiprAbilities;
@@ -57,6 +53,26 @@ public class ServerboundPackets {
                         JarngreiprAbilities.overhead(context.player());
                     });
                 }
+        );
+
+        // Start charging Brutal Swing
+        ServerPlayNetworking.registerGlobalReceiver(
+                BrutalSwingStartPayloadC2S.TYPE,
+                (payload, context) -> context.server().execute(() ->
+                        JarngreiprAbilities.startBrutalSwingCharge(
+                                context.player()
+                        )
+                )
+        );
+
+        // Release Brutal Swing
+        ServerPlayNetworking.registerGlobalReceiver(
+                BrutalSwingReleasePayloadC2S.TYPE,
+                (payload, context) -> context.server().execute(() ->
+                        JarngreiprAbilities.releaseBrutalSwing(
+                                context.player()
+                        )
+                )
         );
     }
 }

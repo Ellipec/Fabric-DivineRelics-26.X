@@ -1,10 +1,6 @@
 package ellipec.divinerelics.Networking;
 
-import ellipec.divinerelics.Networking.packet.DragonStepPayloadC2S;
-import ellipec.divinerelics.Networking.packet.GaleDashPayloadC2S;
-import ellipec.divinerelics.Networking.packet.DivineSlashPayloadC2S;
-import ellipec.divinerelics.Networking.packet.ScaleShotPayloadC2S;
-import ellipec.divinerelics.Networking.packet.OverheadPayloadC2S;
+import ellipec.divinerelics.Networking.packet.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class ModPackets {
@@ -34,6 +30,17 @@ public class ModPackets {
         PayloadTypeRegistry.serverboundPlay().register(
                 OverheadPayloadC2S.TYPE,
                 OverheadPayloadC2S.STREAM_CODEC
+        );
+
+        // Brutal Swing packets
+        PayloadTypeRegistry.serverboundPlay().register(
+                BrutalSwingStartPayloadC2S.TYPE,
+                BrutalSwingStartPayloadC2S.STREAM_CODEC
+        );
+
+        PayloadTypeRegistry.serverboundPlay().register(
+                BrutalSwingReleasePayloadC2S.TYPE,
+                BrutalSwingReleasePayloadC2S.STREAM_CODEC
         );
     }
 }
