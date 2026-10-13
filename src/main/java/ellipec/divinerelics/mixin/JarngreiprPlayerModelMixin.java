@@ -52,6 +52,8 @@ public abstract class JarngreiprPlayerModelMixin
 
 
         // Brutal Swing: Tray pose with a leftward sweep
+
+        // Brutal Swing: Tray pose with a leftward sweep
         if (animationState == JarngreiprClientAnimation.State.SWINGING) {
             float progress =
                     JarngreiprClientAnimation.getSwingProgress(0.0f);
@@ -59,22 +61,22 @@ public abstract class JarngreiprPlayerModelMixin
             float easedProgress =
                     progress * progress * (3.0f - 2.0f * progress);
 
-            // Extend the arm straight outward.
+            // Raise the arm into the attack position.
             this.rightArm.xRot =
                     (float) Math.toRadians(-90.0f);
 
-            // Sweep 45 degrees across the player to their left.
+            // Keep the horizontal sweep animated.
             this.rightArm.yRot =
                     (float) Math.toRadians(
-                            45.0f - 45.0f * easedProgress
+                            0.0f - 45.0f * easedProgress
                     );
 
-            // Rotate the arm into the tray-holding pose.
-            this.rightArm.zRot =
-                    (float) Math.toRadians(-90.0f);
+            // Keep the palm orientation unchanged for this test.
+            this.rightArm.zRot = 0.0f;
 
             return;
         }
+
 
 
 

@@ -73,14 +73,20 @@ public class JarngreiprRenderer extends GeoItemRenderer<JarngreiprItem> {
 
         } else if (state == JarngreiprClientAnimation.State.SWINGING) {
 
-            // Rotate the axe 90 degrees around the X-axis.
+            // Preserve the existing swing rotations.
             poseStack.mulPose(
-                    Axis.YP.rotationDegrees(-90.0f)
+                    Axis.XP.rotationDegrees(-90.0f)
             );
+
+            poseStack.mulPose(
+                    Axis.ZP.rotationDegrees(-90.0f)
+            );
+
+            poseStack.translate(0.04f, -0.4f, 0.35f);
 
         } else if (state == JarngreiprClientAnimation.State.RECOVERY) {
 
-            // No extra weapon rotation during recovery.
+            // No extra weapon rotation or translation during recovery.
         }
     }
 }

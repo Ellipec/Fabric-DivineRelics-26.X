@@ -1,3 +1,4 @@
+
 package ellipec.divinerelics.powers.passive;
 
 import ellipec.divinerelics.Networking.packet.JarngreiprMomentumPayloadS2C;
@@ -155,6 +156,72 @@ public class JarngreiprPassives {
         }
     }
 
+    /**
+     * Decreases every tracked target's momentum by one stage.
+     * Momentum that reaches zero is removed.
+     */
+    private static void reduceAllMomentum(
+            ServerPlayer player
+    ) {
+
+        Map<UUID, MomentumData> targets =
+                momentum.get(player.getUUID());
+
+        if (targets == null) {
+            return;
+        }
+
+        Iterator<Map.Entry<UUID, MomentumData>> targetIterator =
+                targets.entrySet().iterator();
+
+        while (targetIterator.hasNext()) {
+
+            Map.Entry<UUID, MomentumData> targetEntry =
+                    targetIterator.next();
+
+            MomentumData data =
+                    targetEntry.getValue();
+
+            data.hits =
+                    Math.max(
+                            data.hits - 1,
+                            0
+                    );
+
+            LivingEntity target =
+                    findTarget(
+                            player,
+                            targetEntry.getKey()
+                    );
+
+            if (data.hits <= 0) {
+
+                if (target != null) {
+                    sendMomentum(
+                            player,
+                            target,
+                            0
+                    );
+                }
+
+                targetIterator.remove();
+                continue;
+            }
+
+            if (target != null) {
+                sendMomentum(
+                        player,
+                        target,
+                        data.hits
+                );
+            }
+        }
+
+        if (targets.isEmpty()) {
+            momentum.remove(player.getUUID());
+        }
+    }
+
     private static void resetPlayerMomentum(
             ServerPlayer player
     ) {
@@ -212,7 +279,7 @@ public class JarngreiprPassives {
                     entry.getValue();
 
             if (currentHealth < previousHealth) {
-                resetPlayerMomentum(player);
+                reduceAllMomentum(player);
             }
 
             entry.setValue(currentHealth);

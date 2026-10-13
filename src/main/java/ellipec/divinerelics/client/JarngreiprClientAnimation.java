@@ -17,7 +17,7 @@ public class JarngreiprClientAnimation {
     private static float chargeProgress = 0.0f;
 
     public static final int ANIMATION_LENGTH = 15;
-    public static final int SWING_LENGTH = 7;
+    public static final int SWING_LENGTH = 5;
     public static final int RECOVERY_LENGTH = 5;
 
     // Existing animation support
