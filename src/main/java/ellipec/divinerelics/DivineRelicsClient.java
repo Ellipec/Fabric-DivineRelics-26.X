@@ -254,7 +254,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         }
 
         // ARMOUR ABILITIES
-        while (ModKeyMappings.ARMOUR_PRIMARY_ABILITY.consumeClick()) {
+        while (ModKeyMappings.ARMOUR_SECONDARY_ABILITY.consumeClick()) {
 
             // AEGIS: CLEANSING OF THE UNHOLY
             if (client.player != null
