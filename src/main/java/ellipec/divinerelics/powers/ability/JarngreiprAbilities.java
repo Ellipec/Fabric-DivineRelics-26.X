@@ -25,7 +25,7 @@ import java.util.UUID;
 public class JarngreiprAbilities {
 
     public static final int OVERHEAD_COOLDOWN = 300;
-    public static final int BRUTAL_SWING_COOLDOWN = 0;
+    public static final int BRUTAL_SWING_COOLDOWN = 350;
     public static final int BRUTAL_SWING_MAX_CHARGE = 60;
 
     private static final int OVERHEAD_IMPACT_DELAY = 9;

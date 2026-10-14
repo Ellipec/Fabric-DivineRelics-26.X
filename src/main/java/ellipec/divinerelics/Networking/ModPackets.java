@@ -32,7 +32,6 @@ public class ModPackets {
                 OverheadPayloadC2S.STREAM_CODEC
         );
 
-        // Brutal Swing packets
         PayloadTypeRegistry.serverboundPlay().register(
                 BrutalSwingStartPayloadC2S.TYPE,
                 BrutalSwingStartPayloadC2S.STREAM_CODEC
@@ -41,6 +40,10 @@ public class ModPackets {
         PayloadTypeRegistry.serverboundPlay().register(
                 BrutalSwingReleasePayloadC2S.TYPE,
                 BrutalSwingReleasePayloadC2S.STREAM_CODEC
+        );
+        PayloadTypeRegistry.serverboundPlay().register(
+                CleansingOfTheUnholyPayloadC2S.TYPE,
+                CleansingOfTheUnholyPayloadC2S.STREAM_CODEC
         );
     }
 }

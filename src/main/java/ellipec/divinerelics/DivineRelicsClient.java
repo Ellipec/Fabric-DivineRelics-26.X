@@ -9,6 +9,7 @@ import ellipec.divinerelics.entity.DivineSlashRenderer;
 import ellipec.divinerelics.entity.ModEntities;
 import ellipec.divinerelics.item.ModItems;
 import ellipec.divinerelics.keymapping.ModKeyMappings;
+import ellipec.divinerelics.powers.ability.AegisAbilities;
 import ellipec.divinerelics.powers.ability.DragonRuinAbilities;
 import ellipec.divinerelics.powers.ability.JarngreiprAbilities;
 import ellipec.divinerelics.powers.ability.TempestEdgeAbilities;
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -31,15 +33,23 @@ import java.util.Map;
 
 public class DivineRelicsClient implements ClientModInitializer {
 
+    // TEMPEST EDGE ABILITIES
     private static int galeDashCooldown = 0;
     private static int divineSlashCooldown = 0;
+
+    // DRAGON'S RUIN ABILITIES
     private static int dragonStepCooldown = 0;
     private static int scaleShotCooldown = 0;
+
+    // JARNGREIPR ABILITIES
     private static int overheadCooldown = 0;
 
     private static boolean brutalSwingKeyWasDown = false;
     private static int brutalSwingChargeTicks = 0;
     private static boolean brutalSwingCharging = false;
+
+    // AEGIS ABILITIES
+    private static int cleansingCooldown = 0;
 
     private static final List<String> cooldownOrder = new ArrayList<>();
 
@@ -120,6 +130,14 @@ public class DivineRelicsClient implements ClientModInitializer {
         HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath(
                         DivineRelics.MOD_ID,
+                        "cleansing_of_the_unholy_cooldown"
+                ),
+                DivineRelicsClient::renderCleansingCooldown
+        );
+
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath(
+                        DivineRelics.MOD_ID,
                         "brutal_swing_charge"
                 ),
                 DivineRelicsClient::renderBrutalSwingCharge
@@ -160,6 +178,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         JarngreiprClientAnimation.tick();
         handleBrutalSwingInput(client);
 
+        // PRIMARY WEAPON ABILITIES
         while (ModKeyMappings.PRIMARY_ABILITY.consumeClick()) {
 
             if (client.player != null
@@ -204,6 +223,7 @@ public class DivineRelicsClient implements ClientModInitializer {
             }
         }
 
+        // SECONDARY WEAPON ABILITIES
         while (ModKeyMappings.SECONDARY_ABILITY.consumeClick()) {
 
             if (client.player != null
@@ -233,17 +253,51 @@ public class DivineRelicsClient implements ClientModInitializer {
             }
         }
 
+        // ARMOUR ABILITIES
+        while (ModKeyMappings.ARMOUR_PRIMARY_ABILITY.consumeClick()) {
+
+            // AEGIS: CLEANSING OF THE UNHOLY
+            if (client.player != null
+                    && cleansingCooldown <= 0
+                    && client.player.getItemBySlot(EquipmentSlot.HEAD)
+                    .is(ModItems.HELM_OF_THE_ANCIENTS)
+                    && client.player.getItemBySlot(EquipmentSlot.CHEST)
+                    .is(ModItems.SOUL_OF_AEGIS)
+                    && client.player.getItemBySlot(EquipmentSlot.LEGS)
+                    .is(ModItems.AEGIS_RESOLVE)
+                    && client.player.getItemBySlot(EquipmentSlot.FEET)
+                    .is(ModItems.AEGIS_VALOR)) {
+
+                ClientPlayNetworking.send(
+                        new CleansingOfTheUnholyPayloadC2S()
+                );
+
+                cleansingCooldown =
+                        AegisAbilities.CLEANSING_OF_THE_UNHOLY_COOLDOWN;
+
+                cooldownOrder.remove("cleansing_of_the_unholy");
+                cooldownOrder.add("cleansing_of_the_unholy");
+            }
+        }
+
+        // COOLDOWN COUNTDOWNS
         if (galeDashCooldown > 0) galeDashCooldown--;
         if (divineSlashCooldown > 0) divineSlashCooldown--;
         if (dragonStepCooldown > 0) dragonStepCooldown--;
         if (scaleShotCooldown > 0) scaleShotCooldown--;
         if (overheadCooldown > 0) overheadCooldown--;
+        if (cleansingCooldown > 0) cleansingCooldown--;
 
+        // REMOVE FINISHED COOLDOWNS FROM THE HUD ORDER
         if (galeDashCooldown <= 0) cooldownOrder.remove("gale_dash");
         if (divineSlashCooldown <= 0) cooldownOrder.remove("divine_slash");
         if (dragonStepCooldown <= 0) cooldownOrder.remove("dragon_step");
         if (scaleShotCooldown <= 0) cooldownOrder.remove("scale_shot");
         if (overheadCooldown <= 0) cooldownOrder.remove("overhead");
+
+        if (cleansingCooldown <= 0) {
+            cooldownOrder.remove("cleansing_of_the_unholy");
+        }
     }
 
     private static void handleBrutalSwingInput(Minecraft client) {
@@ -307,6 +361,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         brutalSwingKeyWasDown = keyDown;
     }
 
+    // TEMPEST EDGE: GALE DASH COOLDOWN
     private static void renderGaleDashCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
@@ -326,6 +381,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // TEMPEST EDGE: DIVINE SLASH COOLDOWN
     private static void renderDivineSlashCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
@@ -345,6 +401,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // DRAGON'S RUIN: DRAGON STEP COOLDOWN
     private static void renderDragonStepCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
@@ -364,6 +421,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // DRAGON'S RUIN: SCALE SHOT COOLDOWN
     private static void renderScaleShotCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
@@ -383,6 +441,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // JARNGREIPR: OVERHEAD COOLDOWN
     private static void renderOverheadCooldown(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
@@ -402,6 +461,27 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // AEGIS: CLEANSING OF THE UNHOLY COOLDOWN
+    private static void renderCleansingCooldown(
+            GuiGraphicsExtractor graphics,
+            DeltaTracker deltaTracker
+    ) {
+        if (cleansingCooldown <= 0) return;
+
+        int position = cooldownOrder.indexOf("cleansing_of_the_unholy");
+        if (position == -1) return;
+
+        renderCooldownBar(
+                graphics,
+                cleansingCooldown,
+                AegisAbilities.CLEANSING_OF_THE_UNHOLY_COOLDOWN,
+                position,
+                0xFFB09A19,
+                new ItemStack(ModItems.HEART_OF_AEGIS)
+        );
+    }
+
+    // JARNGREIPR: BRUTAL SWING CHARGE BAR
     private static void renderBrutalSwingCharge(
             GuiGraphicsExtractor graphics,
             DeltaTracker deltaTracker
@@ -472,6 +552,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // SHARED COOLDOWN BAR RENDERER
     private static void renderCooldownBar(
             GuiGraphicsExtractor graphics,
             int cooldown,
@@ -532,6 +613,7 @@ public class DivineRelicsClient implements ClientModInitializer {
         );
     }
 
+    // SHARED TEXTURE COOLDOWN BAR RENDERER
     private static void renderTextureCooldownBar(
             GuiGraphicsExtractor graphics,
             int cooldown,

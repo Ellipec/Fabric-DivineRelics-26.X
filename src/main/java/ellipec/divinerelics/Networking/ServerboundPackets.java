@@ -5,6 +5,7 @@ import ellipec.divinerelics.powers.ability.DragonRuinAbilities;
 import ellipec.divinerelics.powers.ability.TempestEdgeAbilities;
 import ellipec.divinerelics.powers.ability.JarngreiprAbilities;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import ellipec.divinerelics.powers.ability.AegisAbilities;
 
 public class ServerboundPackets {
 
@@ -73,6 +74,15 @@ public class ServerboundPackets {
                                 context.player()
                         )
                 )
+        );
+
+        ServerPlayNetworking.registerGlobalReceiver(
+                CleansingOfTheUnholyPayloadC2S.TYPE,
+                (payload, context) -> {
+                    context.server().execute(() -> {
+                        AegisAbilities.cleansingOfTheUnholy(context.player());
+                    });
+                }
         );
     }
 }

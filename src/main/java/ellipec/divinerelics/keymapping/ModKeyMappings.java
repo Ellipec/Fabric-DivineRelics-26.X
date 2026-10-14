@@ -1,3 +1,4 @@
+
 package ellipec.divinerelics.keymapping;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -8,6 +9,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ModKeyMappings {
 
+    // WEAPON ABILITIES
     public static final KeyMapping.Category DIVINE_RELICS_CATEGORY =
             KeyMapping.Category.register(
                     Identifier.fromNamespaceAndPath(
@@ -42,6 +44,37 @@ public class ModKeyMappings {
                             "key.divinerelics.ultimate_ability",
                             InputConstants.Type.KEYSYM,
                             GLFW.GLFW_KEY_X,
+                            DIVINE_RELICS_CATEGORY
+                    )
+            );
+
+    // ARMOUR ABILITIES
+    public static final KeyMapping ARMOUR_PRIMARY_ABILITY =
+            KeyMappingHelper.registerKeyMapping(
+                    new KeyMapping(
+                            "key.divinerelics.armour_primary_ability",
+                            InputConstants.Type.KEYSYM,
+                            GLFW.GLFW_KEY_B,
+                            DIVINE_RELICS_CATEGORY
+                    )
+            );
+
+    public static final KeyMapping ARMOUR_SECONDARY_ABILITY =
+            KeyMappingHelper.registerKeyMapping(
+                    new KeyMapping(
+                            "key.divinerelics.armour_secondary_ability",
+                            InputConstants.Type.KEYSYM,
+                            GLFW.GLFW_KEY_N,
+                            DIVINE_RELICS_CATEGORY
+                    )
+            );
+
+    public static final KeyMapping ARMOUR_ULTIMATE_ABILITY =
+            KeyMappingHelper.registerKeyMapping(
+                    new KeyMapping(
+                            "key.divinerelics.armour_ultimate_ability",
+                            InputConstants.Type.KEYSYM,
+                            GLFW.GLFW_KEY_M,
                             DIVINE_RELICS_CATEGORY
                     )
             );

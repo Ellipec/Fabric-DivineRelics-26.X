@@ -58,7 +58,6 @@ public class DivineRelics implements ModInitializer {
 				TempestEdgePassives.applyPassives(player);
 			}
 
-			// Járngreipr ability timing
 			JarngreiprAbilities.tick(server);
 		});
 	}
